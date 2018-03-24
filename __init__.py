@@ -2,6 +2,7 @@
 
 import os
 from PerfectoLibrary.keywords import *
+from PerfectoLibrary.listeners import *
 from PerfectoLibrary.version import VERSION
 
 __version__ = VERSION

@@ -19,6 +19,7 @@ class _DeviceKeywords(KeywordGroup):
         params['state'] = state
         params['method'] = method
         self.driver.execute_script('mobile:device:rotate', params)
+        
     def start_application_by_name(self,name):
         params = {}
         params['identifier'] = name
