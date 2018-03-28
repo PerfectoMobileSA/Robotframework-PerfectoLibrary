@@ -23,4 +23,11 @@ class _DeviceKeywords(KeywordGroup):
     def start_application_by_name(self,name):
         params = {}
         params['identifier'] = name
-        self.driver.execute_script('mobile:application:open', params)        
+        self.driver.execute_script('mobile:application:open', params)
+    
+    def button_image_click(self,label,threhold=80):
+        params = {}
+        params['label']= label
+        params['threshold']= threhold
+        params['imageBounds.needleBound']= 30
+        self.driver.execute_script('mobile:button-image:click', params)        
