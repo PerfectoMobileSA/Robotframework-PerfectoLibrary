@@ -11,6 +11,7 @@ __version__ = VERSION
 class PerfectoLibrary(
     _ReportingKeywords,
     _DeviceKeywords,
+	_PerfectoListener,
 ):
     """
 
