@@ -30,4 +30,11 @@ class _DeviceKeywords(KeywordGroup):
         params['label']= label
         params['threshold']= threhold
         params['imageBounds.needleBound']= 30
-        self.driver.execute_script('mobile:button-image:click', params)        
+        self.driver.execute_script('mobile:button-image:click', params)       
+    def maximize_window(self):
+        self.driver.maximize_window()
+    def scroll_to_element(self,elementxpath):
+        params = {}
+        params['element'] = (self.driver.findElement(By.xpath(elementxpath))).GetId()
+        params['toVisible'] = 'any'
+        self.driver.execute_script('mobile:scroll', params)
