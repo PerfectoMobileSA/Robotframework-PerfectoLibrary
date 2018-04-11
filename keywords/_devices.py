@@ -35,6 +35,6 @@ class _DeviceKeywords(KeywordGroup):
         self.driver.maximize_window()
     def scroll_to_element(self,elementxpath):
         params = {}
-        params['element'] = (self.driver.findElement(By.xpath(elementxpath))).GetId()
+        params['element'] = self.driver.find_element_by_xpath(elementxpath).get_id()
         params['toVisible'] = 'any'
         self.driver.execute_script('mobile:scroll', params)
