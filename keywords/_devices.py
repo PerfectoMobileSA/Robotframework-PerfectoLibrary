@@ -6,12 +6,13 @@ from perfecto import *
 from robot.libraries.BuiltIn import BuiltIn
 from appium.webdriver.common.touch_action import TouchAction
 from selenium.webdriver.common.action_chains import ActionChains
+from SeleniumLibrary import ElementFinder
 from .keywordgroup import KeywordGroup
 
 class _DeviceKeywords(KeywordGroup):
     def __init__(self):
 		self.bi = BuiltIn()
-		
+		self._element_finder = ElementFinder(self)
     def init_device(self):
 		aplib = self.bi.get_library_instance('AppiumLibrary')
 		self.driver = aplib._current_application()
@@ -44,4 +45,14 @@ class _DeviceKeywords(KeywordGroup):
     def scroll_element_into_view(self,locator):
         element=self.driver.find_element(locator)
         ActionChains(self.driver).move_to_element(element).perform()
-        
+    def set_focus_to_element(self, locator):
+        """Sets focus to element identified by ``locator``.
+        See the `Locating elements` section for details about the locator
+        syntax.
+        Prior to SeleniumLibrary 3.0 this keyword was named `Focus`.
+        """
+        element = self._element_finder.find_element(locator)
+        self.driver.execute_script("arguments[0].focus();", element)
+    def focus(self, locator):
+        """Deprecated. Use `Set Focus To Element` instead."""
+        self.set_focus_to_element(locator)   
