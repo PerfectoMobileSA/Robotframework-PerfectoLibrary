@@ -10,6 +10,7 @@ from selenium.webdriver.common.actions.interaction import NONE
 class _PerfectoListener(object):
     ROBOT_LISTENER_API_VERSION = 2
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
+    driver=''
     
     def __init__(self):
         self.ROBOT_LIBRARY_LISTENER = self
