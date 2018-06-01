@@ -17,7 +17,7 @@ class _PerfectoListener(object):
     driver=''
 
     def __init__(self):
-#         pdb.Pdb(stdout=sys.__stdout__).set_trace()
+        # pdb.Pdb(stdout=sys.__stdout__).set_trace()
         self.ROBOT_LIBRARY_LISTENER = self
         self.bi=BuiltIn()
         self.reporting_client = NONE
@@ -38,22 +38,32 @@ class _PerfectoListener(object):
             self.reporting_client.test_start(name, TestContext(','.join(attrs['tags'])))
 
     def _start_keyword(self, name, attrs):
-        if not self.active:
-            self._get_execontext()
-        if self.active and self.reporting_client==NONE and self.stop_reporting!=True:
-            self.bi.log_to_console("creating reporting client")
-            self.execontext = PerfectoExecutionContext(self.driver, [','.join(self.tags)], Job(self.longname, '1'), Project('Robotframework Test Project ' + self.id, '1.0'))
-            self.reporting_client = PerfectoReportiumClient(self.execontext)
-            self.reporting_client.test_start(self.longname, TestContext(','.join(self.tags)))
+        try:
+            if not self.active:
+                self._get_execontext()
+            if self.active and self.reporting_client==NONE and self.stop_reporting!=True:
+                # self.bi.log_to_console('\ncreating reporting client')
+                self.execontext = PerfectoExecutionContext(self.driver, [','.join(self.tags)], Job(self.longname, '1'), Project('Robotframework Test Project ' + self.id, '1.0'))
+                self.reporting_client = PerfectoReportiumClient(self.execontext)
+                self.reporting_client.test_start(self.longname, TestContext(','.join(self.tags)))
 
-        if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=NONE:
-            self.reporting_client.step_start(attrs['kwname']+ ' '+' '.join(attrs['args']))
+            if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=NONE:
+                self.reporting_client.step_start(attrs['kwname']+ ' '+' '.join(attrs['args']))
+        except Exception as e:
+            try:
+                self._get_execontext()
+                self.execontext = PerfectoExecutionContext(self.driver, [','.join(self.tags)], Job(self.longname, '1'),
+                                                           Project('Robotframework Test Project ' + self.id, '1.0'))
+                self.reporting_client = PerfectoReportiumClient(self.execontext)
+                # self.reporting_client.test_start(self.longname, TestContext(','.join(self.tags)))
+            except:
+                pass
 
     def _end_keyword(self, name, attrs):
         try:
             if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=NONE and self.stop_reporting!=True:
                 self.reporting_client.step_end(attrs['kwname'] + ' ' + ' '.join(attrs['args']))
-                if attrs['status']!="PASS":
+                if attrs['status']=="FAIL":
                     self.reporting_client.test_stop(TestResultFactory.create_failure("Step Failed!! "+attrs['kwname'] + ' ' + ' '.join(attrs['args'])))
                     self.stop_reporting=True
         except Exception as e:
