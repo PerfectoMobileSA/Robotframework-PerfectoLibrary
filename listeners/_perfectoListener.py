@@ -7,6 +7,7 @@ from perfecto import *
 from SeleniumLibrary import SeleniumLibrary
 from Selenium2Library import Selenium2Library
 from AppiumLibrary import AppiumLibrary
+from Selenium2LibraryExtension import Selenium2LibraryExtension
 from robot.libraries.BuiltIn import BuiltIn
 from selenium.webdriver.common.actions.interaction import NONE
 
@@ -16,12 +17,15 @@ class _PerfectoListener(object):
     driver=''
 
     def __init__(self):
-        # pdb.Pdb(stdout=sys.__stdout__).set_trace()
+#         pdb.Pdb(stdout=sys.__stdout__).set_trace()
         self.ROBOT_LIBRARY_LISTENER = self
         self.bi=BuiltIn()
         self.reporting_client = NONE
         self.active=False
         self.stop_reporting = False
+        self.tags=''
+        self.longname='Robotframework Script'
+        self.id='1'
 
     def _start_test(self, name, attrs):
         # pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -74,7 +78,12 @@ class _PerfectoListener(object):
                     self.driver = self.driver = aplib._current_browser()
                     self.active = True
                 except:
-                    self.active = False
+                    try:
+                        aplib = self.bi.get_library_instance('Selenium2LibraryExtension')
+                        self.driver = self.driver = aplib._current_browser()
+                        self.active = True
+                    except:
+                        self.active = False
 
     def _end_test(self, name, attrs):
         try:
