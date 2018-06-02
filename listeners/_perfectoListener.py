@@ -26,6 +26,7 @@ class _PerfectoListener(object):
         self.tags=''
         self.longname='Robotframework Script'
         self.id='1'
+        self.status='pass'
 
     def _start_test(self, name, attrs):
         # pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -41,14 +42,22 @@ class _PerfectoListener(object):
         try:
             if not self.active:
                 self._get_execontext()
-            if self.active and self.reporting_client==NONE and self.stop_reporting!=True:
+            if self.active and self.reporting_client==NONE and self.stop_reporting!=True \
+                    and "setup" not in attrs['type'].lower()\
+                    and "tear" not in attrs['type'].lower():
                 # self.bi.log_to_console('\ncreating reporting client')
                 self.execontext = PerfectoExecutionContext(self.driver, [','.join(self.tags)], Job(self.longname, '1'), Project('Robotframework Test Project ' + self.id, '1.0'))
                 self.reporting_client = PerfectoReportiumClient(self.execontext)
                 self.reporting_client.test_start(self.longname, TestContext(','.join(self.tags)))
 
-            if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=NONE:
+            if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=NONE\
+                    and "setup" not in attrs['type'].lower()\
+                    and "tear" not in attrs['type'].lower():
                 self.reporting_client.step_start(attrs['kwname']+ ' '+' '.join(attrs['args']))
+            elif self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=NONE and self.stop_reporting!=True\
+                    and "tear" in attrs['type'].lower():
+                self.reporting_client.test_stop(TestResultFactory.create_success())
+
         except Exception as e:
             try:
                 self._get_execontext()
@@ -61,9 +70,11 @@ class _PerfectoListener(object):
 
     def _end_keyword(self, name, attrs):
         try:
-            if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=NONE and self.stop_reporting!=True:
+            if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=NONE and self.stop_reporting!=True\
+                    and "setup" not in attrs['type'].lower()\
+                    and "tear" not in attrs['type'].lower():
                 self.reporting_client.step_end(attrs['kwname'] + ' ' + ' '.join(attrs['args']))
-                if attrs['status']=="FAIL":
+                if 'fail' in attrs['status'].lower():
                     self.reporting_client.test_stop(TestResultFactory.create_failure("Step Failed!! "+attrs['kwname'] + ' ' + ' '.join(attrs['args'])))
                     self.stop_reporting=True
         except Exception as e:
