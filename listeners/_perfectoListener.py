@@ -9,7 +9,6 @@ from Selenium2Library import Selenium2Library
 from AppiumLibrary import AppiumLibrary
 from Selenium2LibraryExtension import Selenium2LibraryExtension
 from robot.libraries.BuiltIn import BuiltIn
-from selenium.webdriver.common.actions.interaction import NONE
 
 class _PerfectoListener(object):
     ROBOT_LISTENER_API_VERSION = 2
@@ -20,13 +19,15 @@ class _PerfectoListener(object):
         # pdb.Pdb(stdout=sys.__stdout__).set_trace()
         self.ROBOT_LIBRARY_LISTENER = self
         self.bi=BuiltIn()
-        self.reporting_client = NONE
+        self.reporting_client = None
         self.active=False
         self.stop_reporting = False
         self.tags=''
         self.longname='Robotframework Script'
         self.id='1'
         self.status='pass'
+        self.message=''
+        self.running=False
 
     def _start_test(self, name, attrs):
         # pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -35,28 +36,35 @@ class _PerfectoListener(object):
         self.tags=attrs['tags']
         if not self.active:
             self._get_execontext()
-        if self.active and self.reporting_client!=NONE:
-            self.reporting_client.test_start(name, TestContext(','.join(attrs['tags'])))
+        if self.active and self.reporting_client!=None and self.running == False:
+            self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.longname, '1'),
+                                                       Project('Robotframework Test Project ' + self.id, '1.0'))
+            self.reporting_client = PerfectoReportiumClient(self.execontext)
+            self.reporting_client.test_start(self.longname, TestContext(*self.tags))
+            self.running = True
 
     def _start_keyword(self, name, attrs):
         try:
             if not self.active:
                 self._get_execontext()
-            if self.active and self.reporting_client==NONE and self.stop_reporting!=True \
-                    and "setup" not in attrs['type'].lower()\
-                    and "tear" not in attrs['type'].lower():
-                # self.bi.log_to_console('\ncreating reporting client')
-                self.execontext = PerfectoExecutionContext(self.driver, [','.join(self.tags)], Job(self.longname, '1'), Project('Robotframework Test Project ' + self.id, '1.0'))
+            if self.active and self.reporting_client==None and self.stop_reporting!=True \
+                    and "keyword" in attrs['type'].lower()\
+                    and self.running == False:
+                self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.longname, '1'), Project('Robotframework Test Project ' + self.id, '1.0'))
                 self.reporting_client = PerfectoReportiumClient(self.execontext)
-                self.reporting_client.test_start(self.longname, TestContext(','.join(self.tags)))
+                self.reporting_client.test_start(self.longname, TestContext(*self.tags))
+                self.running = True
 
-            if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=NONE\
-                    and "setup" not in attrs['type'].lower()\
-                    and "tear" not in attrs['type'].lower():
+            if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=None \
+                    and "keyword" in attrs['type'].lower():
                 self.reporting_client.step_start(attrs['kwname']+ ' '+' '.join(attrs['args']))
-            elif self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=NONE and self.stop_reporting!=True\
+            elif self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=None and self.stop_reporting!=True\
                     and "tear" in attrs['type'].lower():
-                self.reporting_client.test_stop(TestResultFactory.create_success())
+                if self.status == 'pass':
+                    self.reporting_client.test_stop(TestResultFactory.create_success())
+                else:
+                    self.reporting_client.test_stop(TestResultFactory.create_failure(self.message))
+                self.stop_reporting = True
 
         except Exception as e:
             try:
@@ -64,19 +72,18 @@ class _PerfectoListener(object):
                 self.execontext = PerfectoExecutionContext(self.driver, [','.join(self.tags)], Job(self.longname, '1'),
                                                            Project('Robotframework Test Project ' + self.id, '1.0'))
                 self.reporting_client = PerfectoReportiumClient(self.execontext)
-                # self.reporting_client.test_start(self.longname, TestContext(','.join(self.tags)))
             except:
                 pass
 
     def _end_keyword(self, name, attrs):
         try:
-            if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=NONE and self.stop_reporting!=True\
-                    and "setup" not in attrs['type'].lower()\
-                    and "tear" not in attrs['type'].lower():
+            if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=None and self.stop_reporting!=True\
+                    and "keyword" in attrs['type'].lower():
                 self.reporting_client.step_end(attrs['kwname'] + ' ' + ' '.join(attrs['args']))
                 if 'fail' in attrs['status'].lower():
-                    self.reporting_client.test_stop(TestResultFactory.create_failure("Step Failed!! "+attrs['kwname'] + ' ' + ' '.join(attrs['args'])))
-                    self.stop_reporting=True
+                    self.status = 'fail'
+                    self.message="Step Failed!! "+attrs['kwname'] + ' ' + ' '.join(attrs['args'])
+
         except Exception as e:
             self.bi.log_to_console(e)
 
@@ -108,11 +115,13 @@ class _PerfectoListener(object):
 
     def _end_test(self, name, attrs):
         try:
-            if self.active:
-                # self.bi.log_to_console("_end_test")
-                if attrs['status']=="PASS":
-                    self.reporting_client.test_stop(TestResultFactory.create_success())
-                else:
-                    self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message']))
+            if attrs['status']=="PASS":
+                self.reporting_client.test_stop(TestResultFactory.create_success())
+            else:
+                self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message']))
         except Exception as e:
             self.bi.log_to_console(e)
+        self.stop_reporting = False
+        self.reporting_client = None
+        self.active = False
+        self.running = False
