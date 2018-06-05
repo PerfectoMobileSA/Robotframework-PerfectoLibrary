@@ -30,7 +30,7 @@ class _PerfectoListener(object):
         self.running=False
 
     def _start_test(self, name, attrs):
-        pdb.Pdb(stdout=sys.__stdout__).set_trace()
+#         pdb.Pdb(stdout=sys.__stdout__).set_trace()
         self.id=attrs['id']
         self.longname=attrs['longname']
         self.tags=attrs['tags']
