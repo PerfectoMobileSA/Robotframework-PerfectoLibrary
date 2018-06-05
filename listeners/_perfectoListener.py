@@ -30,7 +30,7 @@ class _PerfectoListener(object):
         self.running=False
 
     def _start_test(self, name, attrs):
-        # pdb.Pdb(stdout=sys.__stdout__).set_trace()
+        pdb.Pdb(stdout=sys.__stdout__).set_trace()
         self.id=attrs['id']
         self.longname=attrs['longname']
         self.tags=attrs['tags']
@@ -58,6 +58,8 @@ class _PerfectoListener(object):
             if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=None \
                     and "keyword" in attrs['type'].lower():
                 self.reporting_client.step_start(attrs['kwname']+ ' '+' '.join(attrs['args']))
+                self.status = 'pass'
+                self.message = ''
             elif self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=None and self.stop_reporting!=True\
                     and "tear" in attrs['type'].lower():
                 if self.status == 'pass':
@@ -80,12 +82,19 @@ class _PerfectoListener(object):
             if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=None and self.stop_reporting!=True\
                     and "keyword" in attrs['type'].lower():
                 self.reporting_client.step_end(attrs['kwname'] + ' ' + ' '.join(attrs['args']))
-                if 'fail' in attrs['status'].lower():
-                    self.status = 'fail'
-                    self.message="Step Failed!! "+attrs['kwname'] + ' ' + ' '.join(attrs['args'])
+                # if 'ignore error' in attrs['kwname'].lower():
+                #     self.ignoreError=True
 
         except Exception as e:
             self.bi.log_to_console(e)
+
+    def _log_message(self,message):
+        if message.get('level')=='FAIL':
+            self.status = 'fail'
+            self.message=message.get('message')
+        # elif message.get('level')=='FAIL' and self.ignoreError==True:
+        #     self.ignoreError = False
+
 
     def _get_execontext(self):
         # self.bi.log_to_console("_get_execontext")
