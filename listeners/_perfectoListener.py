@@ -25,8 +25,6 @@ class _PerfectoListener(object):
         self.tags=''
         self.longname='Robotframework Script'
         self.id='1'
-        self.status='pass'
-        self.message=''
         self.running=False
 
     def _start_test(self, name, attrs):
@@ -70,7 +68,7 @@ class _PerfectoListener(object):
         except Exception as e:
             try:
                 self._get_execontext()
-                self.execontext = PerfectoExecutionContext(self.driver, [','.join(self.tags)], Job(self.longname, '1'),
+                self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.longname, '1'),
                                                            Project('Robotframework Test Project ' + self.id, '1.0'))
                 self.reporting_client = PerfectoReportiumClient(self.execontext)
             except:
