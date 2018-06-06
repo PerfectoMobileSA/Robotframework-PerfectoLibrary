@@ -46,7 +46,6 @@ class _PerfectoListener(object):
             if not self.active:
                 self._get_execontext()
             if self.active and self.reporting_client==None and self.stop_reporting!=True \
-                    and "keyword" in attrs['type'].lower()\
                     and self.running == False:
                 self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.longname, '1'), Project('Robotframework Test Project ' + self.id, '1.0'))
                 self.reporting_client = PerfectoReportiumClient(self.execontext)
