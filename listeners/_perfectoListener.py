@@ -80,7 +80,8 @@ class _PerfectoListener(object):
                     and "keyword" in attrs['type'].lower():
                 self.reporting_client.step_end(attrs['kwname'] + ' ' + ' '.join(attrs['args']))
         except Exception as e:
-            self.bi.log_to_console(e)
+            # self.bi.log_to_console(e)
+            pass
 
 
     def _get_execontext(self):
@@ -116,7 +117,8 @@ class _PerfectoListener(object):
             else:
                 self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message']))
         except Exception as e:
-            self.bi.log_to_console(e)
+            # self.bi.log_to_console(e)
+            pass
         self.stop_reporting = False
         self.reporting_client = None
         self.active = False
