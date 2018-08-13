@@ -24,6 +24,7 @@ class _PerfectoListener(object):
         self.stop_reporting = False
         self.tags=''
         self.longname='Robotframework Script'
+		self.jobname='Robotframework Job'
         self.id='1'
         self.running=False
 
@@ -35,7 +36,7 @@ class _PerfectoListener(object):
         if not self.active:
             self._get_execontext()
         if self.active and self.reporting_client!=None and self.running == False:
-            self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.longname, '1'),
+            self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.jobname, '1'),
                                                        Project('Robotframework Test Project ' + self.id, '1.0'))
             self.reporting_client = PerfectoReportiumClient(self.execontext)
             self.reporting_client.test_start(self.longname, TestContext(*self.tags))
@@ -47,7 +48,7 @@ class _PerfectoListener(object):
                 self._get_execontext()
             if self.active and self.reporting_client==None and self.stop_reporting!=True \
                     and self.running == False:
-                self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.longname, '1'), Project('Robotframework Test Project ' + self.id, '1.0'))
+                self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.jobname, '1'), Project('Robotframework Test Project ' + self.id, '1.0'))
                 self.reporting_client = PerfectoReportiumClient(self.execontext)
                 self.reporting_client.test_start(self.longname, TestContext(*self.tags))
                 self.running = True
@@ -67,7 +68,7 @@ class _PerfectoListener(object):
         except Exception as e:
             try:
                 self._get_execontext()
-                self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.longname, '1'),
+                self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.jobname, '1'),
                                                            Project('Robotframework Test Project ' + self.id, '1.0'))
                 self.reporting_client = PerfectoReportiumClient(self.execontext)
             except:
