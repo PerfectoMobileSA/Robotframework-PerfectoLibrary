@@ -24,7 +24,7 @@ class _PerfectoListener(object):
         self.stop_reporting = False
         self.tags=''
         self.longname='Robotframework Script'
-		self.jobname='Robotframework Job'
+        self.jobname='Robotframework Job'
         self.id='1'
         self.running=False
 
