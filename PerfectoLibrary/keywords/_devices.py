@@ -23,12 +23,33 @@ class _DeviceKeywords(KeywordGroup):
         except:
             log_to_console("Your script is not using Appium Driver, devices keywords will not be able to performed")
 
+    def enable_proxy(self, str):
+        proxy = str
+        os.environ['http_proxy'] = proxy
+        os.environ['HTTP_PROXY'] = proxy
+        os.environ['https_proxy'] = proxy
+        os.environ['HTTPS_PROXY'] = proxy
 
-    def install_application(self, repoName,isSensorInstrument):
+    def disable_proxy(self):
+        proxy = ""
+        os.environ['http_proxy'] = proxy
+        os.environ['HTTP_PROXY'] = proxy
+        os.environ['https_proxy'] = proxy
+        os.environ['HTTPS_PROXY'] = proxy
+        try:
+            del os.environ['http_proxy']
+            del os.environ['https_proxy']
+            del os.environ['HTTP_PROXY']
+            del os.environ['HTTPS_PROXY']
+        except:
+            pass
+
+
+    def install_application(self, repoName, isSensorInstrument):
         if self._check_driver:
-            sensorInstrument='nosensor'
-            if isSensorInstrument.lower()=='true':
-                sensorInstrument='sensor'
+            sensorInstrument = 'nosensor'
+            if isSensorInstrument.lower() == 'true':
+                sensorInstrument = 'sensor'
             params = {}
             params['sensorInstrument'] = sensorInstrument
             params['file'] = repoName
@@ -46,7 +67,7 @@ class _DeviceKeywords(KeywordGroup):
             params['identifier'] = name
             self.driver.execute_script('mobile:application:open', params)
 
-    def close_application_by_name(self,name):
+    def close_application_by_name(self, name):
         if self._check_driver:
             params = {}
             params['identifier'] = name
@@ -58,14 +79,14 @@ class _DeviceKeywords(KeywordGroup):
             params['automation'] = 'os'
             self.driver.execute_script('mobile:browser:open', params)
 
-    def browser_execute_script(self,scriptString):
+    def browser_execute_script(self, scriptString):
         if self._check_driver:
             params = {}
             params['script'] = scriptString
             params['timeout'] = '35'
             self.driver.execute_script('mobile:browser:execute', params)
 
-    def browser_execute_repo_script(self,scriptRepoLoc):
+    def browser_execute_repo_script(self, scriptRepoLoc):
         if self._check_driver:
             params = {}
             params['repositoryFile'] = scriptRepoLoc
@@ -83,7 +104,7 @@ class _DeviceKeywords(KeywordGroup):
             params['toVisible'] = 'any'
             self.driver.execute_script('mobile:scroll', params)
 
-# devices actions
+    # devices actions
     def rotate(self, state='landscape', method='device'):
         if self._check_driver:
             params = {}
@@ -91,7 +112,7 @@ class _DeviceKeywords(KeywordGroup):
             params['method'] = method
             self.driver.execute_script('mobile:device:rotate', params)
 
-    def drag(self, x1,y1,x2,y2,duration='5'):
+    def drag(self, x1, y1, x2, y2, duration='5'):
         '''
         The touch event coordinates.
         Format - either "x1,y1,x2,y2" or "x1%,y1%,x2%,y2%"
@@ -103,11 +124,11 @@ class _DeviceKeywords(KeywordGroup):
         '''
         if self._check_driver:
             params = {}
-            params['location'] = x1 + ',' +y1+ ',' +x2+ ',' +y2
+            params['location'] = x1 + ',' + y1 + ',' + x2 + ',' + y2
             params['duration'] = duration
             self.driver.execute_script('mobile:touch:drag', params)
 
-    def gesture(self, startx,starty,endx,endy, operation='Zoom',duration='5'):
+    def gesture(self, startx, starty, endx, endy, operation='Zoom', duration='5'):
         '''
 
         :param startx, starty:The start, touch down, event coordinates.
@@ -130,13 +151,13 @@ class _DeviceKeywords(KeywordGroup):
         '''
         if self._check_driver:
             params = {}
-            params['start'] = startx + ',' +starty
+            params['start'] = startx + ',' + starty
             params['end'] = endx + ',' + endy
             params['operation'] = operation
             params['duration'] = duration
             self.driver.execute_script('mobile:touch:gesture', params)
 
-    def swipe(self, startx,starty,endx,endy, duration='5'):
+    def swipe(self, startx, starty, endx, endy, duration='5'):
         '''
         :param startx, starty:The start, touch down, event coordinates.
                 Format - "x,y" or "x%,y%"
@@ -155,12 +176,12 @@ class _DeviceKeywords(KeywordGroup):
         '''
         if self._check_driver:
             params = {}
-            params['start'] = startx + ',' +starty
+            params['start'] = startx + ',' + starty
             params['end'] = endx + ',' + endy
             params['duration'] = duration
             self.driver.execute_script('mobile:touch:swipe', params)
 
-    def tap(self, locx,locy, duration='5'):
+    def tap(self, locx, locy, duration='5'):
         '''
         Note: As a best practice, this function should only be used in extreme circumstances because it is not
         accurate or adaptable to application modifications. Alternatively, screen analysis functions are recommended for robust automated testing.
@@ -175,7 +196,7 @@ class _DeviceKeywords(KeywordGroup):
         '''
         if self._check_driver:
             params = {}
-            params['location '] = startx + ',' +starty
+            params['location '] = startx + ',' + starty
             params['duration'] = duration
             self.driver.execute_script('mobile:touch:tap', params)
 
@@ -214,8 +235,8 @@ class _DeviceKeywords(KeywordGroup):
         :return: none
         '''
         if self._check_driver:
-            if ignorecase.lower()=='true':
-                ignorecase='nocase'
+            if ignorecase.lower() == 'true':
+                ignorecase = 'nocase'
             else:
                 ignorecase = 'case'
             params = {}
