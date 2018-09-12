@@ -15,11 +15,11 @@ class _PerfectoListener(object):
     ROBOT_LISTENER_API_VERSION = 2
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
     driver=''
-
     projectname = 'Robotframework Test Project'
     projectversion = '1.0'
     jobname = 'Robotframework Test Job'
     jobnumber = '1'
+
 
     def __init__(self):
         # pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -33,6 +33,23 @@ class _PerfectoListener(object):
         self.id='1'
         self.running=False
 
+    def init_listener(self,projectname,projectversion,jobname,jobnumber):
+        """
+        This key word helps to initialize the listener with proper project info
+        :param projectname: current project name
+        :param projectversion: current project version
+        :param jobname: the CI job name
+        :param jobnumber: the CI job number
+        :return:
+        """
+        if projectname != "":
+            self.projectname = projectname
+        if projectversion != "":
+            self.projectversion = projectversion
+        if jobname != "":
+            self.jobname = jobname
+        if jobnumber != "":
+            self.jobnumber = jobnumber
 
 
     def _start_suite(self, name, attrs):
@@ -120,8 +137,8 @@ class _PerfectoListener(object):
                         self.active = False
 
         if self.active:
-            self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(PerfectoLibrary.jobname, PerfectoLibrary.jobnumber),
-                                                       Project(PerfectoLibrary.projectname, PerfectoLibrary.projectversion))
+            self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.jobname, self.jobnumber),
+                                                       Project(self.projectname, self.projectversion))
             self.reporting_client = PerfectoReportiumClient(self.execontext)
 
     def _end_test(self, name, attrs):

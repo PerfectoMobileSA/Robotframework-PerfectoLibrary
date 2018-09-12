@@ -44,23 +44,7 @@ class _DeviceKeywords(KeywordGroup):
             del os.environ['HTTPS_PROXY']
         except:
             pass
-    def init_listener(self,projectname,projectversion,jobname,jobnumber):
-        """
-        This key word helps to initialize the listener with proper project info
-        :param projectname: current project name
-        :param projectversion: current project version
-        :param jobname: the CI job name
-        :param jobnumber: the CI job number
-        :return:
-        """
-        if projectname != "":
-            PerfectoLibrary.projectname = projectname
-        if projectversion != "":
-            PerfectoLibrary.projectversion = projectversion
-        if jobname != "":
-            PerfectoLibrary.jobname = jobname
-        if jobnumber != "":
-            PerfectoLibrary.jobnumber = jobnumber
+
 
     def install_application(self, repoName, isSensorInstrument):
         if self._check_driver:
