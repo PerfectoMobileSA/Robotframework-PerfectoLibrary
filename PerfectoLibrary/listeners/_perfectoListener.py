@@ -3,6 +3,7 @@ import robot
 import inspect
 import pdb
 import sys
+import PerfectoLibrary
 from perfecto import *
 from SeleniumLibrary import SeleniumLibrary
 from Selenium2Library import Selenium2Library

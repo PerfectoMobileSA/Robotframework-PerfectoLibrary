@@ -2,6 +2,7 @@ import perfecto
 import os
 import robot
 import inspect
+import PerfectoLibrary
 from perfecto import *
 from robot.libraries.BuiltIn import BuiltIn
 from appium import webdriver
