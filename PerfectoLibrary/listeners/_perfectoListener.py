@@ -15,7 +15,10 @@ class _PerfectoListener(object):
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
     driver=''
 
-
+    projectname = 'Robotframework Test Project'
+    projectversion = '1.0'
+    jobname = 'Robotframework Test Job'
+    jobnumber = '1'
 
     def __init__(self):
         # pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -28,6 +31,9 @@ class _PerfectoListener(object):
         self.longname='Robotframework Script'
         self.id='1'
         self.running=False
+
+
+
     def _start_suite(self, name, attrs):
 #         pdb.Pdb(stdout=sys.__stdout__).set_trace()
         if not self.active:
@@ -113,8 +119,8 @@ class _PerfectoListener(object):
                         self.active = False
 
         if self.active:
-            self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job('Robotframework Test Job', '1'),
-                                                       Project('Robotframework Test Project ' + self.id, '1.0'))
+            self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(PerfectoLibrary.jobname, PerfectoLibrary.jobnumber),
+                                                       Project(PerfectoLibrary.projectname, PerfectoLibrary.projectversion))
             self.reporting_client = PerfectoReportiumClient(self.execontext)
 
     def _end_test(self, name, attrs):

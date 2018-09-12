@@ -43,7 +43,11 @@ class _DeviceKeywords(KeywordGroup):
             del os.environ['HTTPS_PROXY']
         except:
             pass
-
+    def init_listener(self,projectname,projectversion,jobname,jobnumber):
+        PerfectoLibrary.projectname = projectname
+        PerfectoLibrary.projectversion = projectversion
+        PerfectoLibrary.jobname = jobname
+        PerfectoLibrary.jobnumber = jobnumber
 
     def install_application(self, repoName, isSensorInstrument):
         if self._check_driver:
