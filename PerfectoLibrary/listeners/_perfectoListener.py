@@ -30,7 +30,7 @@ class _PerfectoListener(object):
         self.stop_reporting = False
         self.tags=''
         self.longname='Robotframework Script'
-        self.id='1'
+        self.id='s1-t1'
         self.running=False
 
     def init_listener(self,projectname,projectversion,jobname,jobnumber):
@@ -60,7 +60,7 @@ class _PerfectoListener(object):
     def _start_test(self, name, attrs):
         # pdb.Pdb(stdout=sys.__stdout__).set_trace()
         self.id=attrs['id']
-        self.longname=attrs['longname']
+        self.longname=self.bi.get_variable_value('${TEST NAME}')
         self.tags=attrs['tags']
         if not self.active:
             self._get_execontext()
@@ -72,9 +72,9 @@ class _PerfectoListener(object):
         try:
             if not self.active:
                 self._get_execontext()
-            if self.active and self.reporting_client==None and self.stop_reporting!=True \
+            if self.active and self.reporting_client!=None and self.stop_reporting!=True \
                     and self.running == False:
-                self.reporting_client.test_start(self.longname, TestContext(*self.tags))
+                self.reporting_client.test_start(self.bi.get_variable_value('${TEST NAME}'), TestContext(*self.tags))
                 self.running = True
 
             if self.active and self.reporting_client!=None \

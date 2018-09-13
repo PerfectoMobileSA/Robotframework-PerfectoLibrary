@@ -10,7 +10,7 @@ __version__ = VERSION
 
 class PerfectoLibrary(
     _DeviceKeywords,
-	_PerfectoListener,
+    _PerfectoListener,
 ):
     """
 
@@ -24,3 +24,10 @@ class PerfectoLibrary(
         """
         for base in PerfectoLibrary.__bases__:
             base.__init__(self)
+
+    def __init__(self,projectname,projectversion,jobname,jobnumber):
+        """
+        """
+        for base in PerfectoLibrary.__bases__:
+            base.__init__(self)
+        _PerfectoListener.init_listener(self,projectname,projectversion,jobname,jobnumber)
