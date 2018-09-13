@@ -33,7 +33,7 @@ class _PerfectoListener(object):
         self.id='s1-t1'
         self.running=False
 
-    def init_listener(self,projectname,projectversion,jobname,jobnumber):
+    def init_listener(self,projectname=None,projectversion=None,jobname=None,jobnumber=None):
         """
         This key word helps to initialize the listener with proper project info
         :param projectname: current project name
@@ -42,13 +42,13 @@ class _PerfectoListener(object):
         :param jobnumber: the CI job number
         :return:
         """
-        if projectname != "":
+        if projectname !=None:
             self.projectname = projectname
-        if projectversion != "":
+        if projectversion !=None:
             self.projectversion = projectversion
-        if jobname != "":
+        if jobname !=None:
             self.jobname = jobname
-        if jobnumber != "":
+        if jobnumber !=None:
             self.jobnumber = jobnumber
 
 

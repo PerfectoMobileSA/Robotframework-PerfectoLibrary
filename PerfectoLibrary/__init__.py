@@ -25,7 +25,7 @@ class PerfectoLibrary(
         for base in PerfectoLibrary.__bases__:
             base.__init__(self)
 
-    def __init__(self,projectname,projectversion,jobname,jobnumber):
+    def __init__(self,projectname=None,projectversion=None,jobname=None,jobnumber=None):
         """
         """
         for base in PerfectoLibrary.__bases__:
