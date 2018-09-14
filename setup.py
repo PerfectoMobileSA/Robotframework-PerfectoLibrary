@@ -34,9 +34,6 @@ setup(name='perfectolibrary',
           'Programming Language :: Python :: 3.5',
           'Programming Language :: Python :: 3.6'
       ],
-      setup_requires=[
-          "pytest-runner"
-      ],
       install_requires=[
           'decorator >= 3.3.2',
           'robotframework >= 2.6.0',
@@ -47,7 +44,8 @@ setup(name='perfectolibrary',
           'robotframework-seleniumlibrary >= 3.0.0',
           'robotframework-selenium2library >= 1.6.0',
           'Selenium2LibraryExtension >= 1.1.0',
-          'perfecto >= 2.0.0.1'
+          'perfecto >= 2.0.0.1',
+          'six >= 1.11.0'
       ],
       packages=find_packages(exclude=["demo", "docs", "tests", ]),
       include_package_data=True,
