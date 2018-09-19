@@ -5,10 +5,10 @@ import pdb
 import sys
 import PerfectoLibrary
 from perfecto import *
-from SeleniumLibrary import SeleniumLibrary
-from Selenium2Library import Selenium2Library
-from AppiumLibrary import AppiumLibrary
-from Selenium2LibraryExtension import Selenium2LibraryExtension
+# from SeleniumLibrary import SeleniumLibrary
+# from Selenium2Library import Selenium2Library
+# from AppiumLibrary import AppiumLibrary
+# from Selenium2LibraryExtension import Selenium2LibraryExtension
 from robot.libraries.BuiltIn import BuiltIn
 
 class _PerfectoListener(object):
