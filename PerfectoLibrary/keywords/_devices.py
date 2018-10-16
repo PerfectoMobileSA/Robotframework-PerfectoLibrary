@@ -113,6 +113,17 @@ class _DeviceKeywords(KeywordGroup):
             params['method'] = method
             self.driver.execute_script('mobile:device:rotate', params)
 
+    def edit_text_set(self,label,text,labelDirection,labelOffset):
+        '''
+        '''
+        if self._check_driver:
+            params = {}
+            params['label'] = label
+            params['text'] = text
+            params['label.direction'] = labelDirection
+            params['label.offset'] = labelOffset
+            self.driver.execute_script('mobile:edit-text:set', params)
+
     def drag(self, x1, y1, x2, y2, duration='5'):
         '''
         The touch event coordinates.

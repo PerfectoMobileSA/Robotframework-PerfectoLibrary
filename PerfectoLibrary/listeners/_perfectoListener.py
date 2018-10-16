@@ -80,6 +80,7 @@ class _PerfectoListener(object):
             if self.active and self.reporting_client!=None \
                     and "comment" not in attrs['kwname'].lower() \
                     and "excel" not in attrs['kwname'].lower() \
+                    and "csv" not in attrs['kwname'].lower() \
                     and "sheet" not in attrs['kwname'].lower() \
                     and "cell" not in attrs['kwname'].lower() \
                     and "column" not in attrs['kwname'].lower() \
