@@ -112,18 +112,14 @@ class _DeviceKeywords(KeywordGroup):
             params['state'] = state
             params['method'] = method
             self.driver.execute_script('mobile:device:rotate', params)
-
-    def edit_text_set(self,label,text,labelDirection,labelOffset):
-        '''
-        '''
+            
+    def browser_execute_script(self,text,timeout='20'):
         if self._check_driver:
             params = {}
-            params['label'] = label
-            params['text'] = text
-            params['label.direction'] = labelDirection
-            params['label.offset'] = labelOffset
-            self.driver.execute_script('mobile:edit-text:set', params)
-
+            params['script'] = text
+            params['timeout'] = timeout
+            self.driver.execute_script('mobile:browser:execute', params)
+            
     def drag(self, x1, y1, x2, y2, duration='5'):
         '''
         The touch event coordinates.
@@ -193,7 +189,7 @@ class _DeviceKeywords(KeywordGroup):
             params['duration'] = duration
             self.driver.execute_script('mobile:touch:swipe', params)
 
-    def tap(self, locx, locy, duration='5'):
+    def perfecto_tap(self, locx, locy, duration='5'):
         '''
         Note: As a best practice, this function should only be used in extreme circumstances because it is not
         accurate or adaptable to application modifications. Alternatively, screen analysis functions are recommended for robust automated testing.
@@ -208,7 +204,7 @@ class _DeviceKeywords(KeywordGroup):
         '''
         if self._check_driver:
             params = {}
-            params['location '] = startx + ',' + starty
+            params['location'] = locx + ',' + locy
             params['duration'] = duration
             self.driver.execute_script('mobile:touch:tap', params)
 
