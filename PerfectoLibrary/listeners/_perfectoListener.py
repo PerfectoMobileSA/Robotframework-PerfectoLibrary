@@ -77,7 +77,7 @@ class _PerfectoListener(object):
                 self.reporting_client.test_start(self.bi.get_variable_value('${TEST NAME}'), TestContext(*self.tags))
                 self.running = True
 
-            if self.active and self.reporting_client!=None \
+            if self.active and self.reporting_client!=None and self.stop_reporting!=True \
                     and "comment" not in attrs['kwname'].lower() \
                     and "excel" not in attrs['kwname'].lower() \
                     and "csv" not in attrs['kwname'].lower() \
