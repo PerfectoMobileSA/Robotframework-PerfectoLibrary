@@ -86,6 +86,15 @@ class _PerfectoListener(object):
                     and "column" not in attrs['kwname'].lower() \
                     and "keyword" in attrs['type'].lower() \
                     and "builtin" not in attrs['libname'].lower() \
+                    and "collections" not in attrs['libname'].lower() \
+                    and "dialogs" not in attrs['libname'].lower() \
+                    and "easter" not in attrs['libname'].lower() \
+                    and "operatingsystem" not in attrs['libname'].lower() \
+                    and "process" not in attrs['libname'].lower() \
+                    and "screenshot" not in attrs['libname'].lower() \
+                    and "string" not in attrs['libname'].lower() \
+                    and "telnet" not in attrs['libname'].lower() \
+                    and "xml" not in attrs['libname'].lower() \
                     and "excellibrary" not in attrs['libname'].lower() \
                     and "selenium" not in attrs['libname'].lower() \
                     and "appium" not in attrs['libname'].lower():
@@ -102,13 +111,6 @@ class _PerfectoListener(object):
 
         except Exception as e:
             pass
-            # try:
-            #     self._get_execontext()
-            #     self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job('Robotframework Test Job', '1'),
-            #                                                Project('Robotframework Test Project ' + self.id, '1.0'))
-            #     self.reporting_client = PerfectoReportiumClient(self.execontext)
-            # except:
-            #     pass
 
 
     def _get_execontext(self):
