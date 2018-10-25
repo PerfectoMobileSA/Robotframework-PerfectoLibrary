@@ -62,9 +62,10 @@ class _PerfectoListener(object):
         self.id=attrs['id']
         self.longname=self.bi.get_variable_value('${TEST NAME}')
         self.tags=attrs['tags']
-        if not self.active:
-            self._get_execontext()
+#         if not self.active:
+        self._get_execontext()
         if self.active and self.reporting_client!=None and self.running == False:
+#             self._get_execontext()
             self.reporting_client.test_start(self.longname, TestContext(*self.tags))
             self.running = True
 
@@ -72,11 +73,25 @@ class _PerfectoListener(object):
         try:
             if not self.active:
                 self._get_execontext()
+            
+                
             if self.active and self.reporting_client!=None and self.stop_reporting!=True \
-                    and self.running == False:
+                    and self.running == False and "tear" not in attrs['type'].lower():
                 self.reporting_client.test_start(self.bi.get_variable_value('${TEST NAME}'), TestContext(*self.tags))
                 self.running = True
 
+            
+                # pass
+            if self.active and self.reporting_client!=None and self.stop_reporting!=True\
+                    and "tear" in attrs['type'].lower():
+                if self.bi.get_variable_value('${TEST STATUS}')=='FAIL':
+                    self.reporting_client.test_stop(
+                        TestResultFactory.create_failure(self.bi.get_variable_value('${TEST MESSAGE}')))
+                else:
+                    self.reporting_client.test_stop(TestResultFactory.create_success())
+                self.stop_reporting = True
+                self.running = False
+                
             if self.active and self.reporting_client!=None and self.stop_reporting!=True \
                     and "comment" not in attrs['kwname'].lower() \
                     and "excel" not in attrs['kwname'].lower() \
@@ -84,7 +99,7 @@ class _PerfectoListener(object):
                     and "sheet" not in attrs['kwname'].lower() \
                     and "cell" not in attrs['kwname'].lower() \
                     and "column" not in attrs['kwname'].lower() \
-                    and "keyword" in attrs['type'].lower() \
+                    and "tear" not in attrs['type'].lower() \
                     and "builtin" not in attrs['libname'].lower() \
                     and "collections" not in attrs['libname'].lower() \
                     and "dialogs" not in attrs['libname'].lower() \
@@ -99,20 +114,16 @@ class _PerfectoListener(object):
                     and "selenium" not in attrs['libname'].lower() \
                     and "appium" not in attrs['libname'].lower():
                 self.reporting_client.step_start(attrs['kwname']+ ' '+' '.join(attrs['args']))
-                # pass
-            if self.active and "comment" not in attrs['kwname'].lower() and self.reporting_client!=None and self.stop_reporting!=True\
-                    and "tear" in attrs['type'].lower():
-                if self.bi.get_variable_value('${TEST STATUS}')=='FAIL':
-                    self.reporting_client.test_stop(
-                        TestResultFactory.create_failure(self.bi.get_variable_value('${TEST MESSAGE}')))
-                else:
-                    self.reporting_client.test_stop(TestResultFactory.create_success())
-                self.stop_reporting = True
 
         except Exception as e:
             pass
 
-
+#     def _end_keyword(self, name, attrs):
+#         if "setup" in attrs['type'].lower() \
+#             and ("selenium" in attrs['libname'].lower() \
+#             or "appium"  in attrs['libname'].lower()):
+#                 self._get_execontext()
+                
     def _get_execontext(self):
         # self.bi.log_to_console("_get_execontext")
         try:
