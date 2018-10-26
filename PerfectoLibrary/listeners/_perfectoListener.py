@@ -32,6 +32,8 @@ class _PerfectoListener(object):
         self.longname='Robotframework Script'
         self.id='s1-t1'
         self.running=False
+        self.suitesetup=False
+        self.setupclient=None
 
     def init_listener(self,projectname=None,projectversion=None,jobname=None,jobnumber=None):
         """
@@ -54,6 +56,7 @@ class _PerfectoListener(object):
 
     def _start_suite(self, name, attrs):
 #         pdb.Pdb(stdout=sys.__stdout__).set_trace()
+
         if not self.active:
             self._get_execontext()
 
@@ -65,10 +68,19 @@ class _PerfectoListener(object):
 #         if not self.active:
         self._get_execontext()
         if self.active and self.reporting_client!=None and self.running == False:
-#             self._get_execontext()
+            self._suitesetup_result()
             self.reporting_client.test_start(self.longname, TestContext(*self.tags))
             self.running = True
-
+            
+    def _suitesetup_result(self):
+        if self.suitesetup:
+            if self.bi.get_variable_value('${TEST STATUS}')=='FAIL':
+                self.setupclient.test_stop(
+                    TestResultFactory.create_failure(self.bi.get_variable_value('${TEST MESSAGE}')))
+            else:
+                self.setupclient.test_stop(TestResultFactory.create_success())
+            self.suitesetup=False
+        
     def _start_keyword(self, name, attrs):
         try:
             if not self.active:
@@ -76,9 +88,18 @@ class _PerfectoListener(object):
             
                 
             if self.active and self.reporting_client!=None and self.stop_reporting!=True \
-                    and self.running == False and "tear" not in attrs['type'].lower():
-                self.reporting_client.test_start(self.bi.get_variable_value('${TEST NAME}'), TestContext(*self.tags))
-                self.running = True
+                    and self.running == False and "tear" not in attrs['type'].lower(): 
+                    if self.bi.get_variable_value('${TEST NAME}')!=None:
+                         self._suitesetup_result()                            
+                         self.reporting_client.test_start(self.bi.get_variable_value('${TEST NAME}'), TestContext(*self.tags))
+                        
+                    else:
+                        self.reporting_client.test_start("Suite Setup", TestContext(*self.tags))
+                        self.setupclient=self.reporting_client
+                        self.suitesetup=True
+                    self.running = True
+                    
+                
 
             
                 # pass
@@ -99,7 +120,8 @@ class _PerfectoListener(object):
                     and "sheet" not in attrs['kwname'].lower() \
                     and "cell" not in attrs['kwname'].lower() \
                     and "column" not in attrs['kwname'].lower() \
-                    and "tear" not in attrs['type'].lower() \
+                    and ("keyword" in attrs['type'].lower() \
+                    or "setup" in attrs['type'].lower()) \
                     and "builtin" not in attrs['libname'].lower() \
                     and "collections" not in attrs['libname'].lower() \
                     and "dialogs" not in attrs['libname'].lower() \
