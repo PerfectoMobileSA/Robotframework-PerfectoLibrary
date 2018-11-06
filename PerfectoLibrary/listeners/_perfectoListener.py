@@ -121,7 +121,8 @@ class _PerfectoListener(object):
                     and "cell" not in attrs['kwname'].lower() \
                     and "column" not in attrs['kwname'].lower() \
                     and ("keyword" in attrs['type'].lower() \
-                    or "setup" in attrs['type'].lower()) \
+                    or "setup" in attrs['type'].lower() \
+                    or "For Item" in attrs['type'].lower()) \
                     and "builtin" not in attrs['libname'].lower() \
                     and "collections" not in attrs['libname'].lower() \
                     and "dialogs" not in attrs['libname'].lower() \
