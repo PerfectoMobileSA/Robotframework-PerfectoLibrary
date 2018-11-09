@@ -121,8 +121,7 @@ class _PerfectoListener(object):
                     and "cell" not in attrs['kwname'].lower() \
                     and "column" not in attrs['kwname'].lower() \
                     and ("keyword" in attrs['type'].lower() \
-                    or "setup" in attrs['type'].lower() \
-                    or "For Item" in attrs['type'].lower()) \
+                    or "setup" in attrs['type'].lower()) \
                     and "builtin" not in attrs['libname'].lower() \
                     and "collections" not in attrs['libname'].lower() \
                     and "dialogs" not in attrs['libname'].lower() \
@@ -135,6 +134,7 @@ class _PerfectoListener(object):
                     and "xml" not in attrs['libname'].lower() \
                     and "excellibrary" not in attrs['libname'].lower() \
                     and "selenium" not in attrs['libname'].lower() \
+                    and "database" not in attrs['libname'].lower() \
                     and "appium" not in attrs['libname'].lower():
                 self.reporting_client.step_start(attrs['kwname']+ ' '+' '.join(attrs['args']))
 
