@@ -2,7 +2,7 @@ import perfecto
 import os
 import robot
 import inspect
-import urllib
+import urllib2
 import PerfectoLibrary
 
 # import urlparse
@@ -11,21 +11,23 @@ from robot.libraries.BuiltIn import BuiltIn
 from appium import webdriver
 from .keywordgroup import KeywordGroup
 from ._devices import _DeviceKeywords
-# from urlparse import urlparse
+from urllib import quote_plus
 
 
 class _RestKeywords(KeywordGroup):
     def __init__(self):
         self.bi = BuiltIn()
-        self._check_driver=_DeviceKeywords._check_driver
-        self.driver=None
+        self.securityToken=None
+        self.user=None
+        self.password=None
+        self.host=None
 
     def _perform_rest_request(self,url):
         '''
         :param url:
         :return:
         '''
-        return urllib.open(url)
+        return urllib2.urlopen(url).read()
     
     def _exeRestCmd(self,cmd,subcmd,params):
         '''
@@ -36,18 +38,36 @@ class _RestKeywords(KeywordGroup):
         :return:
         '''
         actions={}
-        
         actions['command'] = cmd
         actions['subcommand'] = subcmd
-        
-#         params={}
-        if('deviceId' not in params):
-            params['deviceId'] = self.driver.capabilities['devicename']
-        svcStr="executions/"+self.driver.capabilities['executionId']
-        res=self._exe_restops("command",svcStr,actions,params)
-#         ConsoleUtils.logWarningBlocks("Step result:" +res);
-#         Assert.assertTrue(res.toLowerCase().contains("success"),res);
-        
+        if self._check_driver():
+            if('deviceId' not in params):
+                params['deviceId'] = self.driver.capabilities['devicename']
+            svcStr="executions/"+self.driver.capabilities['executionId']
+            return self._exe_restops("command",svcStr,actions,params)
+
+    def set_credentials(self,user,password):
+        '''
+
+        :param user:
+        :param password:
+        :return:
+        '''
+        self.user=user
+        self.password=password
+
+    def set_securityToken(self,securityToken):
+        '''
+        :param securityToken:
+        :return:
+        '''
+        self.securityToken=securityToken
+    def set_host(self,host):
+        '''
+        :param host:
+        :return:
+        '''
+        self.host=host
     def retrieve_Device_Info(self,deviceid):
         '''
 
@@ -57,9 +77,10 @@ class _RestKeywords(KeywordGroup):
         acts={}
         params={}
         svcStr="handsets/"+deviceid
-        self._exe_restops("info",svcStr,acts,params)
+        # self.bi.log_to_console( "in retrieve_Device_Info")
+        self.bi.log_to_console(self._exe_restops("info",svcStr,acts,params))
         
-    def start_network_virtulization(self,deviceid,profile):
+    def start_network_virtualization(self,deviceid,profile):
         '''
 
         :param deviceid:
@@ -69,9 +90,9 @@ class _RestKeywords(KeywordGroup):
         params={}
         params['deviceId']=deviceid
         params['profile']=profile
-        self._exeRestCmd("vnetwork","start",params)
+        self.bi.log_to_console(self._exeRestCmd("vnetwork","start",params))
         
-    def update_network_virtulization(self,deviceid,profile):
+    def update_network_virtualization(self,deviceid,profile):
         '''
 
         :param deviceid:
@@ -81,7 +102,7 @@ class _RestKeywords(KeywordGroup):
         params={}
         params['deviceId']=deviceid
         params['profile']=profile
-        self._exeRestCmd("vnetwork","update",params)
+        self.bi.log_to_console(self._exeRestCmd("vnetwork","update",params))
         
         
     def stop_network_virtualization(self,deviceid):
@@ -92,7 +113,7 @@ class _RestKeywords(KeywordGroup):
         '''
         params={}
         params['deviceId']=deviceid
-        self._exeRestCmd("vnetwork","stop",params)
+        self.bi.log_to_console(self._exeRestCmd("vnetwork","stop",params))
         
     def _exe_restops(self,ops,serviceStr,actions,params):
         '''
@@ -103,35 +124,40 @@ class _RestKeywords(KeywordGroup):
         :param params:
         :return:
         '''
-        
-        if self._check_driver:
-            user=self.driver.capabilities['user']
-            password=self.driver.capabilities['password']
-            cloudServer=self.driver.capabilities['remote.server']
-            securityToken=self.driver.capabilities['securityToken']
-            # urlparse(url, scheme, allow_fragments)
-            if (  None == securityToken or securityToken.trim().isEmpty()):
-                authStr="&user=" + user + "&password=" + password
-            else:
-                authStr="&securityToken=" + securityToken
-        
-            actionStr=""
-            for key, value in actions.iteritems():
-                actionStr=actionStr+"&"+key+"="+value
-                
-            paramStr=""
-            for key, value in params.iteritems():
-                paramStr=paramStr+"&param." + key +"="+urllib.urlencode(value, "UTF-8")
-                
-            url = "https://" \
-                + cloudServer \
-                + "/services/" \
-                + serviceStr \
-                + "?operation=" + ops \
-                + authStr \
-                + actionStr \
-                + paramStr
+        user = self.user
+        password = self.password
+        host = self.host
+        securityToken = self.securityToken
 
-            self._perform_rest_request(url)
+        if self._check_driver():
+            user=self.driver.capabilities['user'] if user==None else user
+            password=self.driver.capabilities['password'] if password==None else password
+            host=self.driver.capabilities['host'] if host==None else host
+            securityToken=self.driver.capabilities['securityToken'] if securityToken==None else securityToken
+
+        if (  None == securityToken or "" == securityToken):
+            authStr="&user=" + user + "&password=" + password
+        else:
+            authStr="&securityToken=" + securityToken
+
+        actionStr=""
+        for key, value in actions.iteritems():
+            actionStr=actionStr+"&"+key+"="+value
+
+        paramStr=""
+        for key, value in params.iteritems():
+            paramStr=paramStr+"&param." + key +"="+quote_plus(value)
+
+        url = "https://" \
+            + host \
+            + "/services/" \
+            + serviceStr \
+            + "?operation=" + ops \
+            + authStr \
+            + actionStr \
+            + paramStr
+        self.bi.log_to_console( 'url=' + url)
+
+        return self._perform_rest_request(url)
 
 

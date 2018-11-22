@@ -3,9 +3,10 @@ import os
 import robot
 import inspect
 import PerfectoLibrary
+import appium
 from perfecto import *
 from robot.libraries.BuiltIn import BuiltIn
-from appium import webdriver
+# from appium import webdriver
 from .keywordgroup import KeywordGroup
 from ..listeners import *
 
@@ -15,14 +16,15 @@ class _DeviceKeywords(KeywordGroup):
         self.bi = BuiltIn()
 
     def _check_driver(self):
+        # self.bi.log_to_console("_check_driver")
+
         try:
-            if isinstance(PerfectoLibrary.driver, webdriver):
-                self.driver = PerfectoLibrary.driver
-                return True
-            else:
-                return False
+            aplib = self.bi.get_library_instance('AppiumLibrary')
+            self.driver = aplib._current_application()
+            return True
         except:
-            log_to_console("Your script is not using Appium Driver, devices keywords will not be able to performed")
+            self.bi.log_to_console("Your script is not using Appium Driver, devices keywords will not be able to performed")
+            return False
 
     def enable_proxy(self, str):
         proxy = str
