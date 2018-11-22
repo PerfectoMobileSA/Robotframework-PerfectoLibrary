@@ -49,7 +49,7 @@ class _DeviceKeywords(KeywordGroup):
 
 
     def install_application(self, repoName, isSensorInstrument):
-        if self._check_driver:
+        if self._check_driver():
             sensorInstrument = 'nosensor'
             if isSensorInstrument.lower() == 'true':
                 sensorInstrument = 'sensor'
@@ -59,49 +59,49 @@ class _DeviceKeywords(KeywordGroup):
             self.driver.execute_script('mobile:application:install', params)
 
     def uninstall_application(self, name):
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['identifier'] = name
             self.driver.execute_script('mobile:application:uninstall', params)
 
     def start_application_by_name(self, name):
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['identifier'] = name
             self.driver.execute_script('mobile:application:open', params)
 
     def close_application_by_name(self, name):
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['identifier'] = name
             self.driver.execute_script('mobile:application:close', params)
 
     def open_system_browser(self):
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['automation'] = 'os'
             self.driver.execute_script('mobile:browser:open', params)
 
     def browser_execute_script(self, scriptString):
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['script'] = scriptString
             params['timeout'] = '35'
             self.driver.execute_script('mobile:browser:execute', params)
 
     def browser_execute_repo_script(self, scriptRepoLoc):
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['repositoryFile'] = scriptRepoLoc
             params['timeout'] = '35'
             self.driver.execute_script('mobile:browser:execute', params)
 
     def maximize_window(self):
-        if self._check_driver:
+        if self._check_driver():
             self.driver.maximize_window()
 
     def scroll_to_element(self, elementxpath):
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['element'] = (self.driver.findElement(By.xpath(elementxpath))).GetId()
             params['toVisible'] = 'any'
@@ -109,14 +109,14 @@ class _DeviceKeywords(KeywordGroup):
 
     # devices actions
     def rotate(self, state='landscape', method='device'):
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['state'] = state
             params['method'] = method
             self.driver.execute_script('mobile:device:rotate', params)
             
     def browser_execute_script(self,text,timeout='20'):
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['script'] = text
             params['timeout'] = timeout
@@ -132,7 +132,7 @@ class _DeviceKeywords(KeywordGroup):
         :param duration: The duration, in seconds, for performing the drag operation.
         :return: None
         '''
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['location'] = x1 + ',' + y1 + ',' + x2 + ',' + y2
             params['duration'] = duration
@@ -159,7 +159,7 @@ class _DeviceKeywords(KeywordGroup):
         :param duration: The duration, in seconds, for performing the operation.
         :return:None
         '''
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['start'] = startx + ',' + starty
             params['end'] = endx + ',' + endy
@@ -184,7 +184,7 @@ class _DeviceKeywords(KeywordGroup):
         :param duration: The duration, in seconds, for performing the operation.
         :return:None
         '''
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['start'] = startx + ',' + starty
             params['end'] = endx + ',' + endy
@@ -204,7 +204,7 @@ class _DeviceKeywords(KeywordGroup):
                 Use this to perform a "long-press".
         :return: none
         '''
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['location'] = locx + ',' + locy
             params['duration'] = duration
@@ -217,7 +217,7 @@ class _DeviceKeywords(KeywordGroup):
                 Note: This command receives an x,y sequence relative to the last location coordinates that are not absolute coordinates on the screen.
         :return: none
         '''
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['distance'] = distance
             self.driver.execute_script('mobile:trackball:roll', params)
@@ -230,25 +230,25 @@ class _DeviceKeywords(KeywordGroup):
                 Too low values can lead to a false positive result, while too high values can lead to a false negative result.
         :return: none
         '''
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['label'] = label
             params['threshold'] = threhold
             params['imageBounds.needleBound'] = 30
             self.driver.execute_script('mobile:button-image:click', params)
 
-    def button_text_click(self, label, ignorecase):
+    def button_text_click(self, label, ignorecase='true'):
         '''
         :param label: Repository path to image file (png, jpg). The image that appears on, or related to, the button
         :param threhold:The acceptable match level percentage, between 20 and 100.
                 Too low values can lead to a false positive result, while too high values can lead to a false negative result.
         :return: none
         '''
-        if self._check_driver:
-            if ignorecase.lower() == 'true':
-                ignorecase = 'nocase'
-            else:
+        if self._check_driver():
+            if ignorecase.lower() == 'false':
                 ignorecase = 'case'
+            else:
+                ignorecase = 'nocase'
             params = {}
             params['label'] = label
             params['ignorecase'] = ignorecase
@@ -263,7 +263,7 @@ class _DeviceKeywords(KeywordGroup):
         :param context: all | body    Defines the screen region where to look for the needle.
         :return: String indicating success ("true") or failure ("false")
         '''
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['content'] = content
             params['context'] = context
@@ -278,7 +278,7 @@ class _DeviceKeywords(KeywordGroup):
         :param context: all | body    Defines the screen region where to look for the needle.
         :return: String indicating success ("true") or failure ("false")
         '''
-        if self._check_driver:
+        if self._check_driver():
             params = {}
             params['content'] = content
             params['context'] = context
