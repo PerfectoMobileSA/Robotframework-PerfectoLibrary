@@ -5,7 +5,7 @@ import pdb
 import sys
 import PerfectoLibrary
 from perfecto import *
-# import traceback
+import traceback
 # from SeleniumLibrary import SeleniumLibrary
 # from Selenium2Library import Selenium2Library
 # from AppiumLibrary import AppiumLibrary
@@ -52,7 +52,7 @@ class _PerfectoListener(object):
         if jobname != None:
             self.jobname = jobname
         if jobnumber != None:
-            self.jobnumber = jobnumber
+            self.jobnumber = long(float(jobnumber))
 
     def _start_suite(self, name, attrs):
         #         pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -136,6 +136,7 @@ class _PerfectoListener(object):
                 self.reporting_client.step_start(attrs['kwname'] + ' ' + ' '.join(attrs['args']))
 
         except Exception as e:
+            self.bi.log_to_console(traceback.format_exc())
             pass
 
     #     def _end_keyword(self, name, attrs):
