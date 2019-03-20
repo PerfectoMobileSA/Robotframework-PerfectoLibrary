@@ -4,6 +4,7 @@ import robot
 import inspect
 import PerfectoLibrary
 import appium
+import time
 from perfecto import *
 from robot.libraries.BuiltIn import BuiltIn
 # from appium import webdriver
@@ -23,7 +24,8 @@ class _DeviceKeywords(KeywordGroup):
             self.driver = aplib._current_application()
             return True
         except:
-            self.bi.log_to_console("Your script is not using Appium Driver, devices keywords will not be able to performed")
+            self.bi.log_to_console(
+                "Your script is not using Appium Driver, devices keywords will not be able to performed")
             return False
 
     def enable_proxy(self, str):
@@ -46,7 +48,6 @@ class _DeviceKeywords(KeywordGroup):
             del os.environ['HTTPS_PROXY']
         except:
             pass
-
 
     def install_application(self, repoName, isSensorInstrument):
         if self._check_driver():
@@ -114,14 +115,14 @@ class _DeviceKeywords(KeywordGroup):
             params['state'] = state
             params['method'] = method
             self.driver.execute_script('mobile:device:rotate', params)
-            
-    def browser_execute_script(self,text,timeout='20'):
+
+    def browser_execute_script(self, text, timeout='20'):
         if self._check_driver():
             params = {}
             params['script'] = text
             params['timeout'] = timeout
             self.driver.execute_script('mobile:browser:execute', params)
-            
+
     def drag(self, x1, y1, x2, y2, duration='5'):
         '''
         The touch event coordinates.
@@ -283,4 +284,36 @@ class _DeviceKeywords(KeywordGroup):
             params['content'] = content
             params['context'] = context
             return self.driver.execute_script('mobile:text:find', params)
+        return False
+
+    def device_info(self, property):
+        '''
+        :param property: possible values:
+         manufacturer | model | phoneNumber | deviceId | resolution |
+        resolutionWidth | resolutionHeight | os | osVersion | firmware | location | network | distributer | language | imsi | nativeImei | wifiMacAddress |
+        cradleId | status | inUse | description | position | method | rotation | locked | roles |
+        currentActivity |
+        currentPackage | all | hasAudio | automationInfrastructure
+        :return: String indicating success ("true") or failure ("false")
+         '''
+        if self._check_driver():
+            params = {}
+            params['property'] = property
+            return self.driver.execute_script('mobile:device:info', params)
+        return False
+
+    def keep_session_alive(self, time_in_seconds):
+
+        '''
+        THis keyword will keep the remote session to be alive for the expected length of time
+
+        :param time_in_seconds:
+                to keep the remote session alive for how many seconds
+        :return: String indicating success ("true") or failure ("false")
+        '''
+        if self._check_driver():
+            for i in range(0, int(time_in_seconds) + 1, 60):
+                time.sleep(60)
+                self.device_info('model')
+            return True
         return False
