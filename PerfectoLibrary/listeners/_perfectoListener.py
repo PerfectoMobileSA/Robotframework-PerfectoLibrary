@@ -132,7 +132,7 @@ class _PerfectoListener(object):
                     and "excellibrary" not in attrs['libname'].lower() \
                     and "selenium" not in attrs['libname'].lower() \
                     and "database" not in attrs['libname'].lower() \
-                    and "convert bytes to string" not in attrs['libname'].lower() \
+                    and "bytes" not in attrs['kwname'].lower() \
                     and "appium" not in attrs['libname'].lower():
                 self.reporting_client.step_start(attrs['kwname'] + ' ' + ' '.join(attrs['args']))
 
