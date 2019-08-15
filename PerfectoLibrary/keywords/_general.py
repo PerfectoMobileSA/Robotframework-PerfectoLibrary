@@ -8,6 +8,7 @@ import urllib2
 import traceback
 import time
 import sys
+import subprocess
 from perfecto import *
 from robot.libraries.BuiltIn import BuiltIn
 # from appium import webdriver
@@ -71,6 +72,41 @@ class _GeneralKeywords(KeywordGroup):
         except:
             pass
 
+
+    def enable_perfectoconnect(self,path_to_perfectoconnectexe,cloud,sec_token,proxyuser=None,proxypass=None,proxyserverip=None,proxyport=None):
+        '''
+
+        :param path_to_perfectoconnectexe: The relative or absolute path to the perfectoconnect executable
+        :param cloud: the cloud name, for instance somecloud.perfectomobile.com
+        :param sec_token: the security token to aithenticate you to access the cloud and device
+        :param proxyuser: the proxy username
+        :param proxypass: the proxy password
+        :param proxyserverip: the ipaddress of the proxy server
+        :param proxyport: the port number of the proxy server
+        :return: on seccss, it returns the tunnelId. You can then add tunnelId as the capability when launching perfectodriver
+        '''
+        if ( proxyuser != None and proxypass != None and proxyserverip != None and proxyport != None):
+            cmd = [path_to_perfectoconnectexe, 'start -c ' + cloud + ' -s ' + sec_token + ' -outgoingproxyuser='+proxyuser+' -outgoingproxypass='+proxypass+' -outgoingproxyip='+proxyserverip+' -outgoingproxyport='+proxyport]
+        if ( proxyuser == None and proxypass == None and proxyserverip != None and proxyport != None):
+            cmd = [path_to_perfectoconnectexe,
+                   'start -c ' + cloud + ' -s ' + sec_token + ' -outgoingproxyip=' + proxyserverip + ' -outgoingproxyport=' + proxyport]
+        else:
+            cmd = [path_to_perfectoconnectexe, 'start -c '+cloud+' -s '+sec_token+'']
+
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        o, e = proc.communicate()
+
+        return o.decode('ascii')
+
+    def disable_perfectoconnect(self,path_to_perfectoconnectexe):
+        '''
+            :param path_to_perfectoconnectexe: path_to_perfectoconnectexe: The relative or absolute path to the perfectoconnect executable
+            :return: None
+        '''
+        cmd = [path_to_perfectoconnectexe, 'stop']
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        o, e = proc.communicate()
 
     def maximize_window(self):
         if self._check_driver():
