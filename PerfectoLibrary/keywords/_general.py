@@ -73,10 +73,10 @@ class _GeneralKeywords(KeywordGroup):
             pass
 
 
-    def enable_perfectoconnect(self,path_to_perfectoconnectexe,cloud,sec_token,proxyuser=None,proxypass=None,proxyserverip=None,proxyport=None):
-        '''
+    def perfectoconnect_start(path_to_perfectoconnectexe,cloud,sec_token,proxyuser=None,proxypass=None,proxyserverip=None,proxyport=None):
+        """
 
-        :param path_to_perfectoconnectexe: The relative or absolute path to the perfectoconnect executable
+         :param path_to_perfectoconnectexe: The relative or absolute path to the perfectoconnect executable
         :param cloud: the cloud name, for instance somecloud.perfectomobile.com
         :param sec_token: the security token to aithenticate you to access the cloud and device
         :param proxyuser: the proxy username
@@ -84,22 +84,30 @@ class _GeneralKeywords(KeywordGroup):
         :param proxyserverip: the ipaddress of the proxy server
         :param proxyport: the port number of the proxy server
         :return: on seccss, it returns the tunnelId. You can then add tunnelId as the capability when launching perfectodriver
-        '''
-        if ( proxyuser != None and proxypass != None and proxyserverip != None and proxyport != None):
-            cmd = [path_to_perfectoconnectexe, 'start -c ' + cloud + ' -s ' + sec_token + ' -outgoingproxyuser='+proxyuser+' -outgoingproxypass='+proxypass+' -outgoingproxyip='+proxyserverip+' -outgoingproxyport='+proxyport]
-        if ( proxyuser == None and proxypass == None and proxyserverip != None and proxyport != None):
-            cmd = [path_to_perfectoconnectexe,
-                   'start -c ' + cloud + ' -s ' + sec_token + ' -outgoingproxyip=' + proxyserverip + ' -outgoingproxyport=' + proxyport]
-        else:
-            cmd = [path_to_perfectoconnectexe, 'start -c '+cloud+' -s '+sec_token+'']
+        """
 
+        cmd = ''
+        bi=BuiltIn()
+        if proxyuser is not None and proxypass is not None and proxyserverip is not None and proxyport is not None:
+            # bi.log_to_console("in the first if")
+            cmd = [path_to_perfectoconnectexe, 'start', '--cloudurl='+cloud, '--securitytoken='+sec_token, '--outgoingproxyuser='+proxyuser,
+                   '--outgoingproxypass='+proxypass, '--outgoingproxyip='+proxyserverip, '--outgoingproxyport='+proxyport]
+
+        elif proxyuser is None and proxypass is None and proxyserverip is not None and proxyport is not None:
+            cmd = [path_to_perfectoconnectexe,
+                   'start', '--cloudurl='+cloud, '--securitytoken='+sec_token, '--outgoingproxyip=' + proxyserverip, '--outgoingproxyport=' + proxyport]
+        else:
+            cmd = [path_to_perfectoconnectexe, 'start', '--cloudurl='+cloud, '--securitytoken='+sec_token]
+        # bi.log_to_console("path_to_perfectoconnectexe=" + path_to_perfectoconnectexe)
+        # bi.log_to_console(', '.join(cmd))
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         o, e = proc.communicate()
+        # bi.log_to_console("output="+o.decode('ascii'))
+        # bi.log_to_console("err="+e.decode('ascii'))
+        return o.decode('ascii').strip()
 
-        return o.decode('ascii')
-
-    def disable_perfectoconnect(self,path_to_perfectoconnectexe):
+    def perfectoconnect_stop(path_to_perfectoconnectexe):
         '''
             :param path_to_perfectoconnectexe: path_to_perfectoconnectexe: The relative or absolute path to the perfectoconnect executable
             :return: None
