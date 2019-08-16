@@ -73,7 +73,7 @@ class _GeneralKeywords(KeywordGroup):
             pass
 
 
-    def perfectoconnect_start(path_to_perfectoconnectexe,cloud,sec_token,proxyuser=None,proxypass=None,proxyserverip=None,proxyport=None):
+    def perfectoconnect_start(self,path_to_perfectoconnectexe,cloud,sec_token,proxyuser=None,proxypass=None,proxyserverip=None,proxyport=None):
         """
 
          :param path_to_perfectoconnectexe: The relative or absolute path to the perfectoconnect executable
@@ -107,7 +107,7 @@ class _GeneralKeywords(KeywordGroup):
         # bi.log_to_console("err="+e.decode('ascii'))
         return o.decode('ascii').strip()
 
-    def perfectoconnect_stop(path_to_perfectoconnectexe):
+    def perfectoconnect_stop(self,path_to_perfectoconnectexe):
         '''
             :param path_to_perfectoconnectexe: path_to_perfectoconnectexe: The relative or absolute path to the perfectoconnect executable
             :return: None

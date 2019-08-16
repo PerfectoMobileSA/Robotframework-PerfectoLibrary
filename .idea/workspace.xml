@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a4163715-2306-4430-a29d-749b63699a07" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PerfectoLibrary/listeners/_perfectoListener.py" beforeDir="false" afterPath="$PROJECT_DIR$/PerfectoLibrary/listeners/_perfectoListener.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PerfectoLibrary/keywords/_general.py" beforeDir="false" afterPath="$PROJECT_DIR$/PerfectoLibrary/keywords/_general.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PerfectoLibrary/version.py" beforeDir="false" afterPath="$PROJECT_DIR$/PerfectoLibrary/version.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,7 +13,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/PerfectoLibrary/version.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="30">
@@ -26,7 +25,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PerfectoLibrary/keywords/_devices.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4305">
+            <state relative-caret-position="4110">
               <caret line="287" selection-start-line="287" selection-end-line="287" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
@@ -38,8 +37,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PerfectoLibrary/keywords/_general.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+            <state relative-caret-position="450">
+              <caret line="109" column="34" selection-start-line="109" selection-start-column="34" selection-end-line="109" selection-end-column="34" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -56,11 +55,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PerfectoLibrary/listeners/_perfectoListener.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="392">
-              <caret line="131" column="72" lean-forward="true" selection-start-line="131" selection-start-column="72" selection-end-line="131" selection-end-column="72" />
+              <caret line="131" column="72" selection-start-line="131" selection-start-column="72" selection-end-line="131" selection-end-column="72" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -99,7 +98,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/PerfectoLibrary/keywords/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
+            <state relative-caret-position="90">
               <caret line="8" selection-start-line="8" selection-end-line="8" />
               <folding>
                 <element signature="e#26#63#0" expanded="true" />
@@ -119,16 +118,17 @@
         <option value="$PROJECT_DIR$/PerfectoLibrary/keywords/_rest_acts.py" />
         <option value="$PROJECT_DIR$/setup.py" />
         <option value="$PROJECT_DIR$/PerfectoLibrary/keywords/_devices.py" />
-        <option value="$PROJECT_DIR$/PerfectoLibrary/keywords/_general.py" />
         <option value="$PROJECT_DIR$/PerfectoLibrary/__init__.py" />
         <option value="$PROJECT_DIR$/PerfectoLibrary/keywords/__init__.py" />
         <option value="$PROJECT_DIR$/PerfectoLibrary/listeners/_perfectoListener.py" />
+        <option value="$PROJECT_DIR$/PerfectoLibrary/keywords/_general.py" />
         <option value="$PROJECT_DIR$/PerfectoLibrary/version.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="203" />
+    <option name="x" value="8" />
+    <option name="y" value="23" />
     <option name="width" value="1920" />
     <option name="height" value="835" />
   </component>
@@ -297,10 +297,11 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="203" width="1920" height="835" extended-state="0" />
+    <frame x="8" y="23" width="1920" height="835" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.47375506" visible="true" weight="0.25065824" />
-      <window_info active="true" id="Structure" order="1" sideWeight="0.52624494" side_tool="true" visible="true" weight="0.25065824" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.47240916" visible="true" weight="0.25065824" />
+      <window_info id="Structure" order="1" sideWeight="0.5275909" side_tool="true" visible="true" weight="0.25065824" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -354,18 +355,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/PerfectoLibrary/keywords/_devices.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4305">
+        <state relative-caret-position="4110">
           <caret line="287" selection-start-line="287" selection-end-line="287" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/PerfectoLibrary/keywords/_general.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
@@ -401,10 +392,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/PerfectoLibrary/keywords/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
+        <state relative-caret-position="90">
           <caret line="8" selection-start-line="8" selection-end-line="8" />
           <folding>
             <element signature="e#26#63#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PerfectoLibrary/listeners/_perfectoListener.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="392">
+          <caret line="131" column="72" selection-start-line="131" selection-start-column="72" selection-end-line="131" selection-end-column="72" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PerfectoLibrary/keywords/_general.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="109" column="34" selection-start-line="109" selection-start-column="34" selection-end-line="109" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -413,16 +424,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="16" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/PerfectoLibrary/listeners/_perfectoListener.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="131" column="72" lean-forward="true" selection-start-line="131" selection-start-column="72" selection-end-line="131" selection-end-column="72" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
