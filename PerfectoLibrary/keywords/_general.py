@@ -72,6 +72,17 @@ class _GeneralKeywords(KeywordGroup):
         except:
             pass
 
+    def driver_execute_script(self, command_str, params):
+        """
+
+        :param command_str: This command str can be any Perfecto extended compatible ommands, refer to https://developers.perfectomobile.com/display/PD/Perfecto+extensions
+        :param params: This is a dict object holding params need to be passed to the command_Str, refer to https://developers.perfectomobile.com/display/PD/Perfecto+extensions
+        :return: execution result
+        """
+        if self._check_driver():
+            return self.driver.execute_script(command_str, params)
+        return False
+
 
     def perfectoconnect_start(self,path_to_perfectoconnectexe,cloud,sec_token,proxyuser=None,proxypass=None,proxyserverip=None,proxyport=None):
         """
