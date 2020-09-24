@@ -2,7 +2,7 @@ import perfecto
 import os
 import robot
 import inspect
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import PerfectoLibrary
 
 # import urlparse
@@ -11,7 +11,7 @@ from robot.libraries.BuiltIn import BuiltIn
 from appium import webdriver
 from .keywordgroup import KeywordGroup
 from ._devices import _DeviceKeywords
-from urllib import quote_plus
+from urllib.parse import quote_plus
 
 
 class _RestKeywords(KeywordGroup):
@@ -27,7 +27,7 @@ class _RestKeywords(KeywordGroup):
         :param url:
         :return:
         '''
-        return urllib2.urlopen(url).read()
+        return urlopen(url).read()
     
     def _exeRestCmd(self,cmd,subcmd,params):
         '''
@@ -141,11 +141,11 @@ class _RestKeywords(KeywordGroup):
             authStr="&securityToken=" + securityToken
 
         actionStr=""
-        for key, value in actions.iteritems():
+        for key, value in actions.items():
             actionStr=actionStr+"&"+key+"="+value
 
         paramStr=""
-        for key, value in params.iteritems():
+        for key, value in params.items():
             paramStr=paramStr+"&param." + key +"="+quote_plus(value)
 
         url = "https://" \

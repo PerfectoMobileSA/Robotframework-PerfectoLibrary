@@ -4,7 +4,7 @@ import robot
 import inspect
 import PerfectoLibrary
 import appium
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import traceback
 import time
 import sys
@@ -176,8 +176,8 @@ class _GeneralKeywords(KeywordGroup):
             time.sleep(10)  # have to sleep for 10 seconds
             try:
                 headers = {'PERFECTO-AUTHORIZATION': sectoken, }
-                req = urllib2.Request(exeRptUrl, None, headers)
-                rp = urllib2.urlopen(req)
+                req = urllib.request.Request(exeRptUrl, None, headers)
+                rp = urllib.request.urlopen(req)
                 with open(reportpath + self.reportPdfUrl.rsplit('=', 1)[-1] + '.pdf', 'wb') as output:
                     output.write(rp.read())
                     output.close()

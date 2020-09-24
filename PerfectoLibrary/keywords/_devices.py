@@ -4,7 +4,7 @@ import robot
 import inspect
 import PerfectoLibrary
 import appium
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import time
 import sys
 from perfecto import *

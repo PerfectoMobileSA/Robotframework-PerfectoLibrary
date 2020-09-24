@@ -52,7 +52,7 @@ class _PerfectoListener(object):
         if jobname != None:
             self.jobname = jobname
         if jobnumber != None:
-            self.jobnumber = long(float(jobnumber))
+            self.jobnumber = int(float(jobnumber))
 
     def _start_suite(self, name, attrs):
         #         pdb.Pdb(stdout=sys.__stdout__).set_trace()
