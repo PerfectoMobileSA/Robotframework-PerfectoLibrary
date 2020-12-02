@@ -39,12 +39,12 @@ class _GeneralKeywords(KeywordGroup):
             except:
                 try:
                     aplib = self.bi.get_library_instance('Selenium2Library')
-                    self.driver = self.driver = aplib._current_browser()
+                    self.driver = aplib._current_browser()
                     self.active = True
                 except:
                     try:
                         aplib = self.bi.get_library_instance('Selenium2LibraryExtension')
-                        self.driver = self.driver = aplib._current_browser()
+                        self.driver = aplib._current_browser()
                         self.active = True
                     except:
                         self.active = False
@@ -83,6 +83,38 @@ class _GeneralKeywords(KeywordGroup):
             return self.driver.execute_script(command_str, params)
         return False
 
+    def keep_browser_session_alive(self, time_in_seconds):
+        '''
+        THis keyword will keep the remote session to be alive for the expected length of time
+        :param time_in_seconds:
+                to keep the remote session alive for how many seconds
+        :return: String indicating success ("true") or failure ("false")
+        '''
+        try:
+            aplib = self.bi.get_library_instance('SeleniumLibrary')
+            self.driver = aplib.driver
+            self.active = True
+        except:
+            try:
+                aplib = self.bi.get_library_instance('Selenium2Library')
+                self.driver = aplib._current_browser()
+                self.active = True
+            except:
+                try:
+                    aplib = self.bi.get_library_instance('Selenium2LibraryExtension')
+                    self.driver = aplib._current_browser()
+                    self.active = True
+                except:
+                    self.active = False
+        if self.active:
+            for i in range(0, int(time_in_seconds) + 1, 60):
+                params = {}
+                params['timeout'] = '10'
+                self.driver.execute_script('mobile:browser:execute', params)
+                time.sleep(60)
+            return True
+        else:
+            return False
 
     def perfectoconnect_start(self,path_to_perfectoconnectexe,cloud,sec_token,proxyuser=None,proxypass=None,proxyserverip=None,proxyport=None):
         """
