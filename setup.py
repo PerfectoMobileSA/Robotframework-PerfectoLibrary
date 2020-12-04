@@ -8,7 +8,7 @@ ROOT = dirname(abspath(__file__))
 version_file = join(ROOT, 'PerfectoLibrary', 'version.py')
 exec (compile(open(version_file).read(), version_file, 'exec'))
 
-setup(name='perfectolibrary',
+setup(name='perfectolibrary-py37',
       version=VERSION,
       description='Robot Framework Mobile app testing library for using Perfecto Cloud',
 #       long_description=open(join(ROOT, 'README.rst')).read(),
