@@ -24,6 +24,8 @@
   <component name="ChangeListManager">
     <list default="true" id="a4163715-2306-4430-a29d-749b63699a07" name="Default Changelist" comment="updated the version to 0.5.1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PerfectoLibrary/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/PerfectoLibrary/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PerfectoLibrary/listeners/_perfectoListener.py" beforeDir="false" afterPath="$PROJECT_DIR$/PerfectoLibrary/listeners/_perfectoListener.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,9 +47,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="1k7POVcKFHRxQfHl5HiwEXLZNPr" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -56,17 +58,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/Users/jack/git/Robotframework-PerfectoLibrary"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop__reason__codes&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jack/git/Robotframework-PerfectoLibrary&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/PerfectoLibrary/keywords" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/PerfectoLibrary/listeners" />
     </key>
   </component>
   <component name="SharedIndexes">

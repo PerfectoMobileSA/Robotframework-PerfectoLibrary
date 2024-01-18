@@ -1,5 +1,6 @@
 import os
 import robot
+import json
 import inspect
 import pdb
 import sys
@@ -21,6 +22,7 @@ class _PerfectoListener(object):
     projectversion = '1.0'
     jobname = 'Robotframework Test Job'
     jobnumber = 1
+    failure_config = './failureReasons.json'
 
     def __init__(self):
         # pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -35,8 +37,9 @@ class _PerfectoListener(object):
         self.running = False
         self.suitesetup = False
         self.setupclient = None
+        self.failure_config = './failureReasons.json'
 
-    def init_listener(self, projectname=None, projectversion=None, jobname=None, jobnumber=None):
+    def init_listener(self, projectname=None, projectversion=None, jobname=None, jobnumber=None,failure_config=""):
         """
         This key word helps to initialize the listener with proper project info
         :param projectname: current project name
@@ -53,6 +56,8 @@ class _PerfectoListener(object):
             self.jobname = jobname
         if jobnumber != None:
             self.jobnumber = int(float(jobnumber))
+        if failure_config != "":
+            self.failure_config = failure_config
 
     def _start_suite(self, name, attrs):
         #         pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -192,3 +197,30 @@ class _PerfectoListener(object):
         self.reporting_client = None
         self.active = False
         self.running = False
+
+    def _parse_failure_json_file(self, actual_message):
+        failure_config_loc=self.failure_config
+
+        try:
+            failure_config_file = open(failure_config_loc,"r")
+            with open(failure_config_loc,"r") as failure_config_json_file:
+                failure_config_json_list = json.load(failure_config_json_file)
+
+            for item in failure_config_json_list:
+                if actual_message in item["StackTraceErrors"]:
+
+                    r = item["CustomError"]
+                    failure_config_json_file.close()
+                    return r
+
+        except:
+            console.log("Ignoring Failure Reasons because JSON file was not found in path: " + failure_config_loc)
+            return ""
+
+
+
+
+
+
+
+

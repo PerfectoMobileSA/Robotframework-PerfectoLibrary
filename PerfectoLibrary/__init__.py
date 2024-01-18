@@ -33,3 +33,10 @@ class PerfectoLibrary(
         for base in PerfectoLibrary.__bases__:
             base.__init__(self)
         _PerfectoListener.init_listener(self,projectname,projectversion,jobname,jobnumber)
+
+    def __init__(self,projectname=None,projectversion=None,jobname=None,jobnumber=None,failure_config=None):
+        """
+        """
+        for base in PerfectoLibrary.__bases__:
+            base.__init__(self)
+        _PerfectoListener.init_listener(self,projectname,projectversion,jobname,jobnumber,failure_config)
