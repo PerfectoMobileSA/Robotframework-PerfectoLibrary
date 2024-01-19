@@ -22,7 +22,7 @@ class _PerfectoListener(object):
     projectversion = '1.0'
     jobname = 'Robotframework Test Job'
     jobnumber = 1
-    failure_config = './failureReasons.json'
+    failure_config = './failure_reasons.json'
 
     def __init__(self):
         # pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -37,9 +37,10 @@ class _PerfectoListener(object):
         self.running = False
         self.suitesetup = False
         self.setupclient = None
-        self.failure_config = './failureReasons.json'
+        self.failure_config = './failure_reasons.json'
+        self.excluded_reporting_keywords = './excluded_reporting_keywords.json'
 
-    def init_listener(self, projectname=None, projectversion=None, jobname=None, jobnumber=None,failure_config=""):
+    def init_listener(self, projectname=None, projectversion=None, jobname=None, jobnumber=None,failure_config="",excluded_reporting_keywords=""):
         """
         This key word helps to initialize the listener with proper project info
         :param projectname: current project name
@@ -58,6 +59,8 @@ class _PerfectoListener(object):
             self.jobnumber = int(float(jobnumber))
         if failure_config != "":
             self.failure_config = failure_config
+        if excluded_reporting_keywords != "":
+            self.excluded_reporting_keywords = excluded_reporting_keywords
 
     def _start_suite(self, name, attrs):
         #         pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -206,18 +209,18 @@ class _PerfectoListener(object):
 
 
 
-    def _parse_execlude_reporting_keyword_json_file(self):
-        exclude_reporting_keyword_loc=self.exclude_reporting_keyword_config
+    def _parse_execluded_reporting_keywords_json_file(self):
+        excluded_reporting_keywords_loc=self.excluded_reporting_keywords
 
         try:
-            # exclude_reporting_keyword_json_file = open(exclude_reporting_keyword_loc,"r")
-            with open(exclude_reporting_keyword_loc,"r") as exclude_reporting_keyword_json_file:
-                exclude_reporting_keyword_dict = json.load(exclude_reporting_keyword_json_file)
+            # exclude_reporting_keyword_json_file = open(excluded_reporting_keywords_loc,"r")
+            with open(excluded_reporting_keywords_loc, "r") as execluded_reporting_keywords_json_file:
+                excluded_reporting_keywords_dict = json.load(execluded_reporting_keywords_json_file)
 
-            return exclude_reporting_keyword_dict
+            return excluded_reporting_keywords_dict
 
         except:
-            console.log("Ignoring exclude_reporting_keyword_json_file because JSON file was not found in path: " + exclude_reporting_keyword_loc)
+            console.log("Ignoring execluded_reporting_keywords_json_file because JSON file was not found in path: " + excluded_reporting_keywords_loc)
             return {}
 
 
