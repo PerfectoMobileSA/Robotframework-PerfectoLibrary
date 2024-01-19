@@ -114,31 +114,14 @@ class _PerfectoListener(object):
                     self.reporting_client.test_stop(TestResultFactory.create_success())
                 self.stop_reporting = True
                 self.running = False
+            execlude_reporting_keyword_dict=self._parse_execlude_reporting_keyword_json_file()
+
 
             if self.active and self.reporting_client != None and self.stop_reporting != True \
-                    and "comment" not in attrs['kwname'].lower() \
-                    and "excel" not in attrs['kwname'].lower() \
-                    and "csv" not in attrs['kwname'].lower() \
-                    and "sheet" not in attrs['kwname'].lower() \
-                    and "cell" not in attrs['kwname'].lower() \
-                    and "column" not in attrs['kwname'].lower() \
+                    and attrs['kwname'].lower() not in execlude_reporting_keyword_dict['kwname'] \
+                    and attrs['libname'].lower() not in  execlude_reporting_keyword_dict['libname']\
                     and ("keyword" in attrs['type'].lower() \
-                         or "setup" in attrs['type'].lower()) \
-                    and "builtin" not in attrs['libname'].lower() \
-                    and "collections" not in attrs['libname'].lower() \
-                    and "dialogs" not in attrs['libname'].lower() \
-                    and "easter" not in attrs['libname'].lower() \
-                    and "operatingsystem" not in attrs['libname'].lower() \
-                    and "process" not in attrs['libname'].lower() \
-                    and "screenshot" not in attrs['libname'].lower() \
-                    and "string" not in attrs['libname'].lower() \
-                    and "telnet" not in attrs['libname'].lower() \
-                    and "xml" not in attrs['libname'].lower() \
-                    and "excellibrary" not in attrs['libname'].lower() \
-                    and "selenium" not in attrs['libname'].lower() \
-                    and "database" not in attrs['libname'].lower() \
-                    and "bytes" not in attrs['kwname'].lower() \
-                    and "appium" not in attrs['libname'].lower():
+                         or "setup" in attrs['type'].lower()):
                 self.reporting_client.step_start(attrs['kwname'] + ' ' + ' '.join(attrs['args']))
 
         except Exception as e:
@@ -223,6 +206,19 @@ class _PerfectoListener(object):
 
 
 
+    def _parse_execlude_reporting_keyword_json_file(self):
+        exclude_reporting_keyword_loc=self.exclude_reporting_keyword_config
+
+        try:
+            # exclude_reporting_keyword_json_file = open(exclude_reporting_keyword_loc,"r")
+            with open(exclude_reporting_keyword_loc,"r") as exclude_reporting_keyword_json_file:
+                exclude_reporting_keyword_dict = json.load(exclude_reporting_keyword_json_file)
+
+            return exclude_reporting_keyword_dict
+
+        except:
+            console.log("Ignoring exclude_reporting_keyword_json_file because JSON file was not found in path: " + exclude_reporting_keyword_loc)
+            return {}
 
 
 
