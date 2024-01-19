@@ -183,16 +183,20 @@ class _PerfectoListener(object):
             self.reporting_client = PerfectoReportiumClient(self.execontext)
 
     def _end_test(self, name, attrs):
+        failure_reason_customer_error = ""
         if self.stop_reporting != True:
             try:
                 if attrs['status'] == "PASS":
                     self.reporting_client.test_stop(TestResultFactory.create_success())
                 else:
-                    self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message']))
+                    failure_reason_customer_error = _parse_failure_json_file(attrs['message'])
+                    self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'],"",failure_reason_customer_error))
             except Exception as e:
                 # trace = traceback.format_exc()
                 # self.bi.log_to_console(trace)
-                pass
+                failure_reason_customer_error = _parse_failure_json_file(e)
+                self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'], e, failure_reason_customer_error))
+                # pass
         self.stop_reporting = False
         self.reporting_client = None
         self.active = False
