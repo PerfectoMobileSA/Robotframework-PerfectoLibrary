@@ -37,8 +37,8 @@ class _PerfectoListener(object):
         self.running = False
         self.suitesetup = False
         self.setupclient = None
-        self.failure_config = './failure_reasons.json'
-        self.excluded_reporting_keywords = './excluded_reporting_keywords.json'
+        self.failure_config_orig = './failure_reasons.json'
+        self.excluded_reporting_keywords_orig = './excluded_reporting_keywords.json'
 
     def init_listener(self, projectname=None, projectversion=None, jobname=None, jobnumber=None,failure_config="",excluded_reporting_keywords=""):
         """
@@ -59,8 +59,12 @@ class _PerfectoListener(object):
             self.jobnumber = int(float(jobnumber))
         if failure_config != "":
             self.failure_config = failure_config
+        else:
+            self.failure_config=""
         if excluded_reporting_keywords != "":
             self.excluded_reporting_keywords = excluded_reporting_keywords
+        else:
+            self.excluded_reporting_keywords=""
 
     def _start_suite(self, name, attrs):
         #         pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -170,17 +174,15 @@ class _PerfectoListener(object):
 
     def _end_test(self, name, attrs):
         failure_reason_customer_error = ""
-        if self.stop_reporting != True:
+        if not self.stop_reporting:
             try:
                 if attrs['status'] == "PASS":
                     self.reporting_client.test_stop(TestResultFactory.create_success())
                 else:
-                    failure_reason_customer_error = _parse_failure_json_file(attrs['message'])
-                    self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'],"",failure_reason_customer_error))
+                    failure_reason_customer_error = _match_failure_reasons(attrs['message'])
+                    self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'], "", failure_reason_customer_error))
             except Exception as e:
-                # trace = traceback.format_exc()
-                # self.bi.log_to_console(trace)
-                failure_reason_customer_error = _parse_failure_json_file(e)
+                failure_reason_customer_error = _match_failure_reasons(e)
                 self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'], e, failure_reason_customer_error))
                 # pass
         self.stop_reporting = False
@@ -188,36 +190,44 @@ class _PerfectoListener(object):
         self.active = False
         self.running = False
 
-    def _parse_failure_json_file(self, actual_message):
-        failure_config_loc=self.failure_config
-
+    def _parse_failure_json_file(self):
         try:
-            failure_config_file = open(failure_config_loc,"r")
-            with open(failure_config_loc,"r") as failure_config_json_file:
-                failure_config_json_list = json.load(failure_config_json_file)
+            with open(self.failure_config_orig, 'r') as failure_config_json_file:
+                failure_config_json_list_orig = json.load(failure_config_json_file)
+                failure_config_json_list = failure_config_json_list_orig
 
+            if self.failure_config != "":
+                with open(self.failure_config, 'r') as failure_config_json_file:
+                    failure_config_json_list_add = json.load(failure_config_json_file)
+                failure_config_json_list = list(set(failure_config_json_list_orig + failure_config_json_list_add))
+            return failure_config_json_list
+        except:
+            console.log("Ignoring Failure Reasons because JSON file was not found in path: " + self.failure_config)
+            return []
+    def _match_failure_reasons(self, actual_message):
+        failure_config_json_list=self._parse_failure_json_file()
+
+        try :
             for item in failure_config_json_list:
                 if actual_message in item["StackTraceErrors"]:
-
                     r = item["CustomError"]
-                    failure_config_json_file.close()
                     return r
-
         except:
-            console.log("Ignoring Failure Reasons because JSON file was not found in path: " + failure_config_loc)
             return ""
 
 
 
     def _parse_execluded_reporting_keywords_json_file(self):
-        excluded_reporting_keywords_loc=self.excluded_reporting_keywords
 
         try:
-            # exclude_reporting_keyword_json_file = open(excluded_reporting_keywords_loc,"r")
-            with open(excluded_reporting_keywords_loc, "r") as execluded_reporting_keywords_json_file:
-                excluded_reporting_keywords_dict = json.load(execluded_reporting_keywords_json_file)
+            with open(self.excluded_reporting_keywords_orig, "r") as execluded_reporting_keywords_json_file:
+                excluded_reporting_keywords_dict_orig=json.load(execluded_reporting_keywords_json_file)
 
-            return excluded_reporting_keywords_dict
+            if self.excluded_reporting_keywords!="":
+                with open(self.excluded_reporting_keywords, "r") as execluded_reporting_keywords_json_file:
+                    excluded_reporting_keywords_dict_add = json.load(execluded_reporting_keywords_json_file)
+                excluded_reporting_keywords_dict_orig.update(excluded_reporting_keywords_dict_add)
+            return excluded_reporting_keywords_dict_orig
 
         except:
             console.log("Ignoring execluded_reporting_keywords_json_file because JSON file was not found in path: " + excluded_reporting_keywords_loc)
