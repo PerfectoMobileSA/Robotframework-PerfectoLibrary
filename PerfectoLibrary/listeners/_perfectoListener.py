@@ -22,7 +22,6 @@ class _PerfectoListener(object):
     projectversion = '1.0'
     jobname = 'Robotframework Test Job'
     jobnumber = 1
-    failure_config = './failure_reasons.json'
 
     def __init__(self):
         # pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -37,34 +36,37 @@ class _PerfectoListener(object):
         self.running = False
         self.suitesetup = False
         self.setupclient = None
-        self.failure_config_orig = './failure_reasons.json'
-        self.excluded_reporting_keywords_orig = './excluded_reporting_keywords.json'
+        self.lib_path = os.path.dirname(__file__)
+        self.failure_config_orig = 'failure_reasons.json'
+        self.excluded_reporting_keywords_orig = 'excluded_reporting_keywords.json'
+        self.excluded_reporting_keyword_dict = {}
+        self.failure_config_json_list = []
+        self.failure_config = ''
+        self.excluded_reporting_keywords = ''
 
-    def init_listener(self, projectname=None, projectversion=None, jobname=None, jobnumber=None,failure_config="",excluded_reporting_keywords=""):
+    def init_listener(self, projectname=None, projectversion=None, jobname=None, jobnumber=None,failure_config='',excluded_reporting_keywords=''):
         """
         This key word helps to initialize the listener with proper project info
         :param projectname: current project name
         :param projectversion: current project version
         :param jobname: the CI job name
         :param jobnumber: the CI job number
+        :param failure_config: the CI job number
+        :param excluded_reporting_keywords: the CI job number
         :return:
         """
-        if projectname != None:
+        if projectname is not None:
             self.projectname = projectname
-        if projectversion != None:
+        if projectversion is not None:
             self.projectversion = projectversion
         if jobname != None:
             self.jobname = jobname
-        if jobnumber != None:
+        if jobnumber is not None:
             self.jobnumber = int(float(jobnumber))
-        if failure_config != "":
+        if failure_config != '':
             self.failure_config = failure_config
-        else:
-            self.failure_config=""
-        if excluded_reporting_keywords != "":
+        if excluded_reporting_keywords != '':
             self.excluded_reporting_keywords = excluded_reporting_keywords
-        else:
-            self.excluded_reporting_keywords=""
 
     def _start_suite(self, name, attrs):
         #         pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -79,7 +81,7 @@ class _PerfectoListener(object):
         self.tags = attrs['tags']
         #         if not self.active:
         self._get_execontext()
-        if self.active and self.reporting_client != None and self.running == False:
+        if self.active and self.reporting_client is not None and self.running is False:
             self._suitesetup_result()
             self.reporting_client.test_start(self.longname, TestContext([], self.tags))
             self.running = True
@@ -98,7 +100,7 @@ class _PerfectoListener(object):
             if not self.active:
                 self._get_execontext()
 
-            if self.active and self.reporting_client != None and self.stop_reporting != True \
+            if self.active and self.reporting_client is not None and self.stop_reporting is not True \
                     and self.running == False and "tear" not in attrs['type'].lower():
                 if self.bi.get_variable_value('${TEST NAME}') != None:
                     self._suitesetup_result()
@@ -112,24 +114,27 @@ class _PerfectoListener(object):
                 self.running = True
 
             # pass
-            if self.active and self.reporting_client != None and self.stop_reporting != True \
+            if self.active and self.reporting_client is not None and self.stop_reporting is not True \
                     and "tear" in attrs['type'].lower():
                 if self.bi.get_variable_value('${TEST STATUS}') == 'FAIL':
+                    failure_reason_customer_error = ''
+                    if 'message' in attrs.keys():
+                        failure_reason_customer_error = self._match_failure_reasons(attrs['message'])
                     self.reporting_client.test_stop(
-                        TestResultFactory.create_failure(self.bi.get_variable_value('${TEST MESSAGE}')))
+                        TestResultFactory.create_failure(self.bi.get_variable_value('${TEST MESSAGE}'), None, failure_reason_customer_error))
                 else:
                     self.reporting_client.test_stop(TestResultFactory.create_success())
                 self.stop_reporting = True
                 self.running = False
-            execlude_reporting_keyword_dict=self._parse_execlude_reporting_keyword_json_file()
+            if not self.excluded_reporting_keyword_dict:
+                self._parse_execluded_reporting_keywords_json_file()
 
-
-            if self.active and self.reporting_client != None and self.stop_reporting != True \
-                    and attrs['kwname'].lower() not in execlude_reporting_keyword_dict['kwname'] \
-                    and attrs['libname'].lower() not in  execlude_reporting_keyword_dict['libname']\
-                    and ("keyword" in attrs['type'].lower() \
-                         or "setup" in attrs['type'].lower()):
+            if self.active and self.reporting_client is not None and self.stop_reporting is not True \
+                    and attrs['kwname'].lower() not in self.excluded_reporting_keyword_dict['kwname'] \
+                    and attrs['libname'].lower() not in self.excluded_reporting_keyword_dict['libname'] \
+                    and attrs['type'].lower() in self.excluded_reporting_keyword_dict['type']:
                 self.reporting_client.step_start(attrs['kwname'] + ' ' + ' '.join(attrs['args']))
+
 
         except Exception as e:
             self.bi.log_to_console(traceback.format_exc())
@@ -180,10 +185,12 @@ class _PerfectoListener(object):
                     self.reporting_client.test_stop(TestResultFactory.create_success())
                 else:
                     failure_reason_customer_error = _match_failure_reasons(attrs['message'])
-                    self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'], "", failure_reason_customer_error))
+                    self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'], None,
+                                                                                     failure_reason_customer_error))
             except Exception as e:
                 failure_reason_customer_error = _match_failure_reasons(e)
-                self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'], e, failure_reason_customer_error))
+                self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'], e,
+                                                                                 failure_reason_customer_error))
                 # pass
         self.stop_reporting = False
         self.reporting_client = None
@@ -192,27 +199,36 @@ class _PerfectoListener(object):
 
     def _parse_failure_json_file(self):
         try:
-            with open(self.failure_config_orig, 'r') as failure_config_json_file:
+            with open(self.lib_path + '/' + self.failure_config_orig, 'r') as failure_config_json_file:
                 failure_config_json_list_orig = json.load(failure_config_json_file)
-                failure_config_json_list = failure_config_json_list_orig
+                self.failure_config_json_list = failure_config_json_list_orig
 
-            if self.failure_config != "":
+            if self.failure_config != '' and self.failure_config is not None:
+
                 with open(self.failure_config, 'r') as failure_config_json_file:
                     failure_config_json_list_add = json.load(failure_config_json_file)
-                failure_config_json_list = list(set(failure_config_json_list_orig + failure_config_json_list_add))
-            return failure_config_json_list
-        except:
-            console.log("Ignoring Failure Reasons because JSON file was not found in path: " + self.failure_config)
-            return []
-    def _match_failure_reasons(self, actual_message):
-        failure_config_json_list=self._parse_failure_json_file()
+                self.failure_config_json_list = self.failure_config_json_list + failure_config_json_list_add
 
-        try :
-            for item in failure_config_json_list:
-                if actual_message in item["StackTraceErrors"]:
-                    r = item["CustomError"]
-                    return r
-        except:
+        except Exception as e:
+            print(e)
+            console.log("Ignoring Failure Reasons because JSON file was not found in path: " + self.failure_config)
+
+            return
+
+    def _match_failure_reasons(self, actual_message):
+        if len(self.failure_config_json_list) == 0:
+            self._parse_failure_json_file()
+
+        try:
+            act = actual_message.lower().replace('"', '').replace('\'', '').replace('.', '').strip()
+            for item in self.failure_config_json_list:
+                for it in item["StackTraceErrors"]:
+                    it_mod = it.lower().replace('"', '').replace('\'', '').replace('.', '').strip()
+                    if it_mod == act:
+                        return item["CustomError"]
+
+        except Exception as e:
+            print(e)
             return ""
 
 
@@ -220,18 +236,27 @@ class _PerfectoListener(object):
     def _parse_execluded_reporting_keywords_json_file(self):
 
         try:
-            with open(self.excluded_reporting_keywords_orig, "r") as execluded_reporting_keywords_json_file:
-                excluded_reporting_keywords_dict_orig=json.load(execluded_reporting_keywords_json_file)
+            with open(self.lib_path + '/' + self.excluded_reporting_keywords_orig,
+                      "r") as excluded_reporting_keywords_json_file:
+                excluded_reporting_keywords_dict_orig = json.load(excluded_reporting_keywords_json_file)
+            if self.excluded_reporting_keywords != '' and self.excluded_reporting_keywords is not None:
+                with open(self.excluded_reporting_keywords, "r") as excluded_reporting_keywords_json_file:
+                    excluded_reporting_keywords_dict_add = json.load(excluded_reporting_keywords_json_file)
 
-            if self.excluded_reporting_keywords!="":
-                with open(self.excluded_reporting_keywords, "r") as execluded_reporting_keywords_json_file:
-                    excluded_reporting_keywords_dict_add = json.load(execluded_reporting_keywords_json_file)
-                excluded_reporting_keywords_dict_orig.update(excluded_reporting_keywords_dict_add)
-            return excluded_reporting_keywords_dict_orig
+                for key in excluded_reporting_keywords_dict_orig.keys():
+                    if key in excluded_reporting_keywords_dict_add.keys():
+                        excluded_reporting_keywords_dict_orig[key] += excluded_reporting_keywords_dict_add[key]
+            for key in excluded_reporting_keywords_dict_orig.keys():
+                excluded_reporting_keywords_dict_orig[key] = [a.lower() for a in
+                                                              excluded_reporting_keywords_dict_orig[key]]
 
-        except:
-            console.log("Ignoring execluded_reporting_keywords_json_file because JSON file was not found in path: " + excluded_reporting_keywords_loc)
-            return {}
+            self.excluded_reporting_keyword_dict = excluded_reporting_keywords_dict_orig
+            return
+
+        except Exception as e:
+            print(e)
+            console.log("Ignoring excluded_reporting_keywords_json_file because JSON file was not found in path: " + excluded_reporting_keywords_loc)
+            return
 
 
 

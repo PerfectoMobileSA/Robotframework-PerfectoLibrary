@@ -27,16 +27,25 @@ class PerfectoLibrary(
         for base in PerfectoLibrary.__bases__:
             base.__init__(self)
 
-    def __init__(self,projectname=None,projectversion=None,jobname=None,jobnumber=None):
+    def __init__(self, projectname=None, projectversion=None, jobname=None, jobnumber=None):
         """
         """
         for base in PerfectoLibrary.__bases__:
             base.__init__(self)
-        _PerfectoListener.init_listener(self,projectname,projectversion,jobname,jobnumber)
+        _PerfectoListener.init_listener(self, projectname, projectversion, jobname, jobnumber, '', '')
 
-    def __init__(self,projectname=None,projectversion=None,jobname=None,jobnumber=None,failure_config=None):
+    def __init__(self, projectname=None, projectversion=None, jobname=None, jobnumber=None, failure_config=''):
         """
         """
         for base in PerfectoLibrary.__bases__:
             base.__init__(self)
-        _PerfectoListener.init_listener(self,projectname,projectversion,jobname,jobnumber,failure_config)
+        _PerfectoListener.init_listener(self, projectname, projectversion, jobname, jobnumber, failure_config, '')
+
+    def __init__(self, projectname=None, projectversion=None, jobname=None, jobnumber=None, failure_config='',
+                 excluded_reporting_keywords=''):
+        """
+        """
+        for base in PerfectoLibrary.__bases__:
+            base.__init__(self)
+        _PerfectoListener.init_listener(self, projectname, projectversion, jobname, jobnumber, failure_config,
+                                        excluded_reporting_keywords)
