@@ -149,12 +149,18 @@ class _PerfectoListener(object):
     def _get_execontext(self):
         # self.bi.log_to_console("_get_execontext")
         if self.active:
+            refresh_context = False
             try:
                 aplib = self.bi.get_library_instance('AppiumLibrary')
                 current_driver = aplib._current_application()
-                if self.driver != current_driver:
+                if isinstance(self.driver, list):
+                    if current_driver not in self.driver:
+                        self.driver.append(current_driver)
+                        refresh_context = True
+                elif self.driver != current_driver:
                     self.driver = [self.driver, current_driver]
-
+                    refresh_context = True
+                if refresh_context:
                     self.execontext = PerfectoExecutionContext(self.driver, self.tags,
                                                                Job(self.jobname, self.jobnumber),
                                                                Project(self.projectname, self.projectversion))

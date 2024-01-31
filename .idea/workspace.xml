@@ -23,7 +23,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a4163715-2306-4430-a29d-749b63699a07" name="Default Changelist" comment="updated the version to 0.5.1">
-      <change beforePath="$PROJECT_DIR$/PerfectoLibrary/version.py" beforeDir="false" afterPath="$PROJECT_DIR$/PerfectoLibrary/version.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PerfectoLibrary/listeners/_perfectoListener.py" beforeDir="false" afterPath="$PROJECT_DIR$/PerfectoLibrary/listeners/_perfectoListener.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
