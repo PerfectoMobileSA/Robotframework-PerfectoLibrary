@@ -71,8 +71,8 @@ class _PerfectoListener(object):
     def _start_suite(self, name, attrs):
         #         pdb.Pdb(stdout=sys.__stdout__).set_trace()
 
-        if not self.active:
-            self._get_execontext()
+        #if not self.active:
+        self._get_execontext()
 
     def _start_test(self, name, attrs):
         # pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -97,8 +97,8 @@ class _PerfectoListener(object):
 
     def _start_keyword(self, name, attrs):
         try:
-            if not self.active:
-                self._get_execontext()
+            # if not self.active:
+            self._get_execontext()
 
             if self.active and self.reporting_client is not None and self.stop_reporting is not True \
                     and self.running == False and "tear" not in attrs['type'].lower():
@@ -148,34 +148,49 @@ class _PerfectoListener(object):
 
     def _get_execontext(self):
         # self.bi.log_to_console("_get_execontext")
-        try:
-            aplib = self.bi.get_library_instance('AppiumLibrary')
-            self.driver = aplib._current_application()
-            # self.bi.log_to_console(aplib)
-            self.active = True
-        except:
+        if self.active:
             try:
-                aplib = self.bi.get_library_instance('SeleniumLibrary')
-                self.driver = aplib.driver
+                aplib = self.bi.get_library_instance('AppiumLibrary')
+                current_driver = aplib._current_application()
+                if self.driver != current_driver:
+                    self.driver = [self.driver, current_driver]
+
+                    self.execontext = PerfectoExecutionContext(self.driver, self.tags,
+                                                               Job(self.jobname, self.jobnumber),
+                                                               Project(self.projectname, self.projectversion))
+                    self.reporting_client = PerfectoReportiumClient(self.execontext)
+            except:
+                pass
+
+        else:
+            try:
+                aplib = self.bi.get_library_instance('AppiumLibrary')
+                self.driver = aplib._current_application()
                 # self.bi.log_to_console(aplib)
                 self.active = True
             except:
                 try:
-                    aplib = self.bi.get_library_instance('Selenium2Library')
-                    self.driver = self.driver = aplib._current_browser()
+                    aplib = self.bi.get_library_instance('SeleniumLibrary')
+                    self.driver = aplib.driver
+                    # self.bi.log_to_console(aplib)
                     self.active = True
                 except:
                     try:
-                        aplib = self.bi.get_library_instance('Selenium2LibraryExtension')
+                        aplib = self.bi.get_library_instance('Selenium2Library')
                         self.driver = self.driver = aplib._current_browser()
                         self.active = True
                     except:
-                        self.active = False
+                        try:
+                            aplib = self.bi.get_library_instance('Selenium2LibraryExtension')
+                            self.driver = self.driver = aplib._current_browser()
+                            self.active = True
+                        except:
+                            self.active = False
 
-        if self.active:
-            self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.jobname, self.jobnumber),
-                                                       Project(self.projectname, self.projectversion))
-            self.reporting_client = PerfectoReportiumClient(self.execontext)
+            if self.active:
+                self.execontext = PerfectoExecutionContext(self.driver, self.tags, Job(self.jobname, self.jobnumber),
+                                                           Project(self.projectname, self.projectversion))
+                self.reporting_client = PerfectoReportiumClient(self.execontext)
 
     def _end_test(self, name, attrs):
         failure_reason_customer_error = ""
