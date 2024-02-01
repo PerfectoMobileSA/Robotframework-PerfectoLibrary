@@ -38,7 +38,7 @@ setup(name='perfectolibrary-py37',
           'robotframework-seleniumlibrary >= 3.0.0',
           'robotframework-selenium2library >= 1.6.0',
           'Selenium2LibraryExtension >= 1.1.0',
-          'perfecto-py3-ps >= 1.0.1',
+          'perfecto-py3-ps >= 1.0.3',
           'six >= 1.11.0'
       ],
       packages=find_packages(exclude=["demo", "docs", "tests", ]),
