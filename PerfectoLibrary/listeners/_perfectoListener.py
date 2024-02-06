@@ -72,7 +72,7 @@ class _PerfectoListener(object):
         #         pdb.Pdb(stdout=sys.__stdout__).set_trace()
 
         #if not self.active:
-        self._get_execontext()
+        self._get_execontext(False)
 
     def _start_test(self, name, attrs):
         # pdb.Pdb(stdout=sys.__stdout__).set_trace()
@@ -80,7 +80,7 @@ class _PerfectoListener(object):
         self.longname = self.bi.get_variable_value('${TEST NAME}')
         self.tags = attrs['tags']
         #         if not self.active:
-        self._get_execontext()
+        self._get_execontext(False)
         if self.active and self.reporting_client is not None and self.running is False:
             self._suitesetup_result()
             self.reporting_client.test_start(self.longname, TestContext([], self.tags))
@@ -98,7 +98,7 @@ class _PerfectoListener(object):
     def _start_keyword(self, name, attrs):
         try:
             # if not self.active:
-            self._get_execontext()
+            self._get_execontext(False)
 
             if self.active and self.reporting_client is not None and self.stop_reporting is not True \
                     and self.running == False and "tear" not in attrs['type'].lower():
@@ -116,6 +116,7 @@ class _PerfectoListener(object):
             # pass
             if self.active and self.reporting_client is not None and self.stop_reporting is not True \
                     and "tear" in attrs['type'].lower():
+                self._get_execontext(True)
                 if self.bi.get_variable_value('${TEST STATUS}') == 'FAIL':
                     failure_reason_customer_error = ''
                     if 'message' in attrs.keys():
@@ -146,7 +147,7 @@ class _PerfectoListener(object):
     #             or "appium"  in attrs['libname'].lower()):
     #                 self._get_execontext()
 
-    def _get_execontext(self):
+    def _get_execontext(self,enable_multi):
         # self.bi.log_to_console("_get_execontext")
         if self.active:
             refresh_context = False
@@ -164,7 +165,7 @@ class _PerfectoListener(object):
                     self.execontext = PerfectoExecutionContext(self.driver, self.tags,
                                                                Job(self.jobname, self.jobnumber),
                                                                Project(self.projectname, self.projectversion))
-                    self.reporting_client = PerfectoReportiumClient(self.execontext)
+                    # self.reporting_client = PerfectoReportiumClient(self.execontext)
             except:
                 pass
 
@@ -198,18 +199,27 @@ class _PerfectoListener(object):
                                                            Project(self.projectname, self.projectversion))
                 self.reporting_client = PerfectoReportiumClient(self.execontext)
 
+        if enable_multi:
+            try:
+                if isinstance(self.execontext.driver, list) and len(self.execontext.driver)>1:
+                    self.reporting_client = PerfectoReportiumClient(self.execontext)
+            except:
+                pass
+
+
     def _end_test(self, name, attrs):
         failure_reason_customer_error = ""
+        self._get_execontext(True)
         if not self.stop_reporting:
             try:
                 if attrs['status'] == "PASS":
                     self.reporting_client.test_stop(TestResultFactory.create_success())
                 else:
-                    failure_reason_customer_error = _match_failure_reasons(attrs['message'])
+                    failure_reason_customer_error = self._match_failure_reasons(attrs['message'])
                     self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'], None,
                                                                                      failure_reason_customer_error))
             except Exception as e:
-                failure_reason_customer_error = _match_failure_reasons(e)
+                failure_reason_customer_error = self._match_failure_reasons(e)
                 self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'], e,
                                                                                  failure_reason_customer_error))
                 # pass
