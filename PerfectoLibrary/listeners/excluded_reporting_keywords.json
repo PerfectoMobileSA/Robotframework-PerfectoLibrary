@@ -1,5 +1,5 @@
 {
-   "kwname": ["comment","excel","csv","sheet","cell","column","bytes","run keyword and ignore error","wait until element is enabled"],
+   "kwname": ["comment","excel","csv","sheet","cell","column","bytes"],
    "libname": ["builtin","collections","dialogs","easter","operatingsystem","process","screenshot","string","telnet","xml","excellibrary","selenium","database","appium"],
    "type": ["keyword","setup"]
 }
