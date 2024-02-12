@@ -8,7 +8,7 @@ ROOT = dirname(abspath(__file__))
 version_file = join(ROOT, 'PerfectoLibrary', 'version.py')
 exec (compile(open(version_file).read(), version_file, 'exec'))
 
-setup(name='perfectolibrary-py37',
+setup(name='perfectolibrary-py3',
       version=VERSION,
       description='Robot Framework Mobile app testing library for using Perfecto Cloud',
 #       long_description=open(join(ROOT, 'README.rst')).read(),
@@ -25,8 +25,7 @@ setup(name='perfectolibrary-py37',
           "Programming Language :: Python",
           "Topic :: Software Development :: Testing",
           'Programming Language :: Python',
-          'Programming Language :: Python :: 3.6',
-          'Programming Language :: Python :: 3.7'
+          'Programming Language :: Python :: 3'
       ],
       install_requires=[
           'decorator >= 3.3.2',
