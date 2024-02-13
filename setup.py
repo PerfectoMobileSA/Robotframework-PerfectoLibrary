@@ -25,8 +25,7 @@ setup(name='perfectolibrary-py37',
           "Programming Language :: Python",
           "Topic :: Software Development :: Testing",
           'Programming Language :: Python',
-          'Programming Language :: Python :: 3.6',
-          'Programming Language :: Python :: 3.7'
+          'Programming Language :: Python :: 3'
       ],
       install_requires=[
           'decorator >= 3.3.2',
