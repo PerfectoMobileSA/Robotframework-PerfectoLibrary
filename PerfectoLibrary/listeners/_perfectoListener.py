@@ -201,7 +201,7 @@ class _PerfectoListener(object):
 
         if enable_multi:
             try:
-                if isinstance(self.execontext.driver, list) and len(self.execontext.driver)>1:
+                if isinstance(self.execontext.webdriver, list) and len(self.execontext.webdriver)>1:
                     self.reporting_client = PerfectoReportiumClient(self.execontext)
             except:
                 pass
