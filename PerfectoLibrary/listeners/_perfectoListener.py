@@ -36,7 +36,7 @@ class _PerfectoListener(object):
         self.running = False
         self.suitesetup = False
         self.setupclient = None
-        self.lib_path = os.path.dirname(__file__)
+        self.lib_path = os.path.join(os.path.dirname(__file__), 'data')
         self.failure_config_orig = 'failure_reasons.json'
         self.excluded_reporting_keywords_orig = 'excluded_reporting_keywords.json'
         self.excluded_reporting_keyword_dict = {}
@@ -241,8 +241,8 @@ class _PerfectoListener(object):
                 self.failure_config_json_list = self.failure_config_json_list + failure_config_json_list_add
 
         except Exception as e:
-            print(e)
-            console.log("Ignoring Failure Reasons because JSON file was not found in path: " + self.failure_config)
+            # print(e)
+            # console.log("Ignoring Failure Reasons because JSON file was not found in path: " + self.failure_config)
 
             return
 
@@ -259,7 +259,7 @@ class _PerfectoListener(object):
                         return item["CustomError"]
 
         except Exception as e:
-            print(e)
+            # print(e)
             return ""
 
 
@@ -285,8 +285,8 @@ class _PerfectoListener(object):
             return
 
         except Exception as e:
-            print(e)
-            console.log("Ignoring excluded_reporting_keywords_json_file because JSON file was not found in path: " + excluded_reporting_keywords_loc)
+            # print(e)
+            # console.log("Ignoring excluded_reporting_keywords_json_file because JSON file was not found in path: " + excluded_reporting_keywords_loc)
             return
 
 
