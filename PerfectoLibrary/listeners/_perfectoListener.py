@@ -118,9 +118,7 @@ class _PerfectoListener(object):
                     and "tear" in attrs['type'].lower():
                 self._get_execontext(True)
                 if self.bi.get_variable_value('${TEST STATUS}') == 'FAIL':
-                    failure_reason_customer_error = ''
-                    if 'message' in attrs.keys():
-                        failure_reason_customer_error = self._match_failure_reasons(attrs['message'])
+                    failure_reason_customer_error = self._match_failure_reasons(self.bi.get_variable_value('${TEST MESSAGE}'))
                     self.reporting_client.test_stop(
                         TestResultFactory.create_failure(self.bi.get_variable_value('${TEST MESSAGE}'), None, failure_reason_customer_error))
                 else:
