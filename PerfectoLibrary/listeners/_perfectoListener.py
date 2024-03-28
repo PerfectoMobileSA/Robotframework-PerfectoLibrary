@@ -217,8 +217,9 @@ class _PerfectoListener(object):
                     self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'], None,
                                                                                      failure_reason_customer_error))
             except Exception as e:
-                failure_reason_customer_error = self._match_failure_reasons(e)
-                self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'], e,
+                if self.reporting_client:
+                    failure_reason_customer_error = self._match_failure_reasons(e)
+                    self.reporting_client.test_stop(TestResultFactory.create_failure(attrs['message'], e,
                                                                                  failure_reason_customer_error))
                 # pass
         self.stop_reporting = False
