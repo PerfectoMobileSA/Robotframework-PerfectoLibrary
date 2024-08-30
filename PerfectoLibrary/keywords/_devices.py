@@ -301,3 +301,8 @@ class _DeviceKeywords(KeywordGroup):
                 self.device_info('model')
             return True
         return False
+
+    def perform_accessibility_audit(self, tag):
+        if self._check_driver():
+            params = {'tag': tag}
+            self.driver.execute_script('mobile:checkAccessibility:audit', params)

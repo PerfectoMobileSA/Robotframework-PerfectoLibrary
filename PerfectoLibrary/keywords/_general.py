@@ -9,6 +9,7 @@ import traceback
 import time
 import sys
 import subprocess
+from axe_core_python.selenium import Axe
 from perfecto import *
 from robot.libraries.BuiltIn import BuiltIn
 # from appium import webdriver
@@ -18,6 +19,7 @@ from ..listeners import *
 
 class _GeneralKeywords(KeywordGroup):
     def __init__(self):
+        self.driver = None
         self.bi = BuiltIn()
         self.reportPdfUrl = ''
 
@@ -216,3 +218,15 @@ class _GeneralKeywords(KeywordGroup):
                 return False
         self.bi.log_to_console("empty with " + self.reportPdfUrl)
         return False
+
+    def accessibility_audit_current_page(self):
+        self.driver = self.bi.get_library_instance('SeleniumLibrary').driver
+
+        if self.driver:
+            self.driver.maximize_window()
+            axe = Axe()
+            result = axe.run(self.driver)
+            violations = result['violations']
+            for item in violations:
+                self.reporting_client.reportium_assert('Accessbility volation: '+str(item), False)
+

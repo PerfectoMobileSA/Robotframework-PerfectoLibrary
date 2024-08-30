@@ -23,10 +23,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a4163715-2306-4430-a29d-749b63699a07" name="Default Changelist" comment="updated the version to 0.5.1">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PerfectoLibrary/listeners/_perfectoListener.py" beforeDir="false" afterPath="$PROJECT_DIR$/PerfectoLibrary/listeners/_perfectoListener.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PerfectoLibrary/keywords/_devices.py" beforeDir="false" afterPath="$PROJECT_DIR$/PerfectoLibrary/keywords/_devices.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PerfectoLibrary/keywords/_general.py" beforeDir="false" afterPath="$PROJECT_DIR$/PerfectoLibrary/keywords/_general.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/PerfectoLibrary/version.py" beforeDir="false" afterPath="$PROJECT_DIR$/PerfectoLibrary/version.py" afterDir="false" />
-
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,16 +59,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;develop__reason__codes&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/jack/git/Robotframework-PerfectoLibrary/PerfectoLibrary/listeners&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/Users/jack/git/Robotframework-PerfectoLibrary/PerfectoLibrary/listeners",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
-
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/PerfectoLibrary/listeners" />
@@ -82,7 +81,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-50da183f06c8-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13135.95" />
+        <option value="bundled-python-sdk-09665e90c3a7-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.15026.15" />
       </set>
     </attachedChunks>
   </component>
