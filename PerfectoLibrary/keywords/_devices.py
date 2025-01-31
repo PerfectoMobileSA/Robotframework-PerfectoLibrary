@@ -19,7 +19,6 @@ class _DeviceKeywords(KeywordGroup):
         self.bi = BuiltIn()
         self.reportPdfUrl = ''
 
-
     def _check_driver(self):
         # self.bi.log_to_console("_check_driver")
 
@@ -286,7 +285,6 @@ class _DeviceKeywords(KeywordGroup):
             return self.driver.execute_script('mobile:device:info', params)
         return False
 
-
     def keep_session_alive(self, time_in_seconds):
         '''
         THis keyword will keep the remote session to be alive for the expected length of time
@@ -306,3 +304,13 @@ class _DeviceKeywords(KeywordGroup):
         if self._check_driver():
             params = {'tag': tag}
             self.driver.execute_script('mobile:checkAccessibility:audit', params)
+
+    def perform_ai_checkpoint(self, ask_ai_a_yes_or_no_question):
+        if self._check_driver():
+            params = {'validation': ask_ai_a_yes_or_no_question}
+            result = self.driver.execute_script('perfecto:ai-validation', params)
+
+            if str(result).lower() == "true":
+                return True
+
+            return False
