@@ -4,7 +4,7 @@ import robot
 import inspect
 import urllib.request, urllib.error, urllib.parse
 import PerfectoLibrary
-
+    
 # import urlparse
 from perfecto import *
 from robot.libraries.BuiltIn import BuiltIn
@@ -12,8 +12,8 @@ from appium import webdriver
 from .keywordgroup import KeywordGroup
 from ._devices import _DeviceKeywords
 from urllib.parse import quote_plus
-
-
+        
+        
 class _RestKeywords(KeywordGroup):
     def __init__(self):
         self.bi = BuiltIn()
@@ -21,17 +21,17 @@ class _RestKeywords(KeywordGroup):
         self.user=None
         self.password=None
         self.host=None
-
+        
     def _perform_rest_request(self,url):
         '''
         :param url:
         :return:
         '''
         return urlopen(url).read()
-    
+        
     def _exeRestCmd(self,cmd,subcmd,params):
         '''
-
+        
         :param cmd:
         :param subcmd:
         :param params:

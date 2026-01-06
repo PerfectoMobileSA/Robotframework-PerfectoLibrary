@@ -15,6 +15,7 @@ from ..listeners import *
 
 
 class _DeviceKeywords(KeywordGroup):
+
     def __init__(self):
         self.bi = BuiltIn()
         self.reportPdfUrl = ''
@@ -305,12 +306,31 @@ class _DeviceKeywords(KeywordGroup):
             params = {'tag': tag}
             self.driver.execute_script('mobile:checkAccessibility:audit', params)
 
-    def perform_ai_checkpoint(self, ask_ai_a_yes_or_no_question):
+    def perform_ai_checkpoint(self, ask_ai_a_yes_or_no_question, isReasoningNeeded=False):
         if self._check_driver():
-            params = {'validation': ask_ai_a_yes_or_no_question}
-            result = self.driver.execute_script('perfecto:ai-validation', params)
+            params = {'validation': ask_ai_a_yes_or_no_question, 'reasoning': isReasoningNeeded}
+            result = self.driver.execute_script('perfecto:ai:validation', params)
 
             if str(result).lower() == "true":
                 return True
 
+            return False
+
+    def perform_ai_user_action(self, ask_ai_perform_an_action, is_reasoning_needed=False, is_output_variable_enabled=False):
+        '''
+        Asks the AI to perform a user action with optional reasoning and output variable control.
+        :param ask_ai_perform_an_action: The action to ask AI to perform.
+        :param is_reasoning_needed: Boolean, whether reasoning is required.
+        :param is_output_variable_enabled: Boolean, whether to enable output variable.
+        :return: True if successful, False otherwise.
+        '''
+        if self._check_driver():
+            params = {
+                'action': ask_ai_perform_an_action,
+                'reasoning': is_reasoning_needed,
+                'outputVariable': is_output_variable_enabled
+            }
+            result = self.driver.execute_script('perfecto:ai:useractions', params)
+            if str(result).lower() == "true":
+                return True
             return False
