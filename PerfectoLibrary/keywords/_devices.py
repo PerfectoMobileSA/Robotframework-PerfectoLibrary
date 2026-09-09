@@ -306,15 +306,31 @@ class _DeviceKeywords(KeywordGroup):
             params = {'tag': tag}
             self.driver.execute_script('mobile:checkAccessibility:audit', params)
 
-    def perform_ai_checkpoint(self, ask_ai_a_yes_or_no_question, isReasoningNeeded=False):
+    def _normalize_ai_result(self, result):
+        if isinstance(result, str) and result.lower() in ('true', 'false'):
+            return result.lower() == 'true'
+        return result
+
+    def perform_ai_command(self, prompt, reasoning=False, output_variable=False):
         if self._check_driver():
-            params = {'validation': ask_ai_a_yes_or_no_question, 'reasoning': isReasoningNeeded}
+            params = {
+                'prompt': prompt,
+                'reasoning': reasoning,
+                'outputVariable': output_variable
+            }
+            result = self.driver.execute_script('perfecto:ai:command', params)
+            return self._normalize_ai_result(result)
+        return False
+
+    def perform_ai_validation(self, validation, reasoning=False):
+        if self._check_driver():
+            params = {'validation': validation, 'reasoning': reasoning}
             result = self.driver.execute_script('perfecto:ai:validation', params)
+            return self._normalize_ai_result(result)
+        return False
 
-            if str(result).lower() == "true":
-                return True
-
-            return False
+    def perform_ai_checkpoint(self, ask_ai_a_yes_or_no_question, isReasoningNeeded=False):
+        return self.perform_ai_validation(ask_ai_a_yes_or_no_question, isReasoningNeeded)
 
     def perform_ai_user_action(self, ask_ai_perform_an_action, is_reasoning_needed=False, is_output_variable_enabled=False):
         '''
@@ -330,7 +346,15 @@ class _DeviceKeywords(KeywordGroup):
                 'reasoning': is_reasoning_needed,
                 'outputVariable': is_output_variable_enabled
             }
-            result = self.driver.execute_script('perfecto:ai:useractions', params)
-            if str(result).lower() == "true":
-                return True
-            return False
+            result = self.driver.execute_script('perfecto:ai:user-action', params)
+            return self._normalize_ai_result(result)
+        return False
+
+    def perform_ai_visual_comparison(self, baseline_id, fail_criteria):
+        if self._check_driver():
+            params = {
+                'baselineId': baseline_id,
+                'failCriteria': fail_criteria
+            }
+            return self.driver.execute_script('perfecto:ai:visual-comparison', params)
+        return False

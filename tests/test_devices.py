@@ -445,6 +445,39 @@ class TestDeviceKeywords(unittest.TestCase):
         expected_params = {'tag': 'login_page'}
         self.mock_driver.execute_script.assert_called_with('mobile:checkAccessibility:audit', expected_params)
 
+    def test_perform_ai_command_with_object_response(self):
+        """Test unified AI command parameter and object response handling."""
+        response = {
+            'result': True,
+            'outputVariables': {'temp': {'name': None, 'value': '21'}}
+        }
+        self.mock_driver.execute_script.return_value = response
+
+        result = self.device_keywords.perform_ai_command(
+            "Take the temperature and put it in ${temp}", True, True
+        )
+
+        expected_params = {
+            'prompt': "Take the temperature and put it in ${temp}",
+            'reasoning': True,
+            'outputVariable': True
+        }
+        self.mock_driver.execute_script.assert_called_with('perfecto:ai:command', expected_params)
+        self.assertEqual(result, response)
+
+    def test_perform_ai_validation(self):
+        """Test AI validation command."""
+        self.mock_driver.execute_script.return_value = True
+
+        result = self.device_keywords.perform_ai_validation("Is login successful?", True)
+
+        expected_params = {
+            'validation': 'Is login successful?',
+            'reasoning': True
+        }
+        self.mock_driver.execute_script.assert_called_with('perfecto:ai:validation', expected_params)
+        self.assertTrue(result)
+
     def test_perform_ai_checkpoint_true(self):
         """Test AI checkpoint returning true."""
         self.device_keywords.driver = self.mock_driver
@@ -487,7 +520,7 @@ class TestDeviceKeywords(unittest.TestCase):
             'reasoning': True,
             'outputVariable': False
         }
-        self.mock_driver.execute_script.assert_called_with('perfecto:ai:useractions', expected_params)
+        self.mock_driver.execute_script.assert_called_with('perfecto:ai:user-action', expected_params)
         self.assertTrue(result)
 
     def test_perform_ai_user_action_failure(self):
@@ -502,8 +535,43 @@ class TestDeviceKeywords(unittest.TestCase):
             'reasoning': False,
             'outputVariable': False
         }
-        self.mock_driver.execute_script.assert_called_with('perfecto:ai:useractions', expected_params)
+        self.mock_driver.execute_script.assert_called_with('perfecto:ai:user-action', expected_params)
         self.assertFalse(result)
+
+    def test_perform_ai_user_action_with_object_response(self):
+        """Test AI user action preserves output variables."""
+        response = {
+            'result': True,
+            'outputVariables': {'country': {'name': None, 'value': 'France'}}
+        }
+        self.mock_driver.execute_script.return_value = response
+
+        result = self.device_keywords.perform_ai_user_action(
+            "Read the country and put it in ${country}", False, True
+        )
+
+        self.assertEqual(result, response)
+
+    def test_perform_ai_visual_comparison(self):
+        """Test AI visual comparison parameters and response."""
+        response = {
+            'success': True,
+            'message': 'Comparison completed successfully',
+            'differences': [{'type': 'VALUE', 'explanation': 'Text changed', 'fail': True}]
+        }
+        self.mock_driver.execute_script.return_value = response
+        fail_criteria = ['value', 'missing', 'error']
+
+        result = self.device_keywords.perform_ai_visual_comparison('login-screen', fail_criteria)
+
+        expected_params = {
+            'baselineId': 'login-screen',
+            'failCriteria': fail_criteria
+        }
+        self.mock_driver.execute_script.assert_called_with(
+            'perfecto:ai:visual-comparison', expected_params
+        )
+        self.assertEqual(result, response)
 
 
 if __name__ == '__main__':
